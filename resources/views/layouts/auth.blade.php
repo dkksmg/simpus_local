@@ -3,12 +3,14 @@
 
 <head>
     @include('includes.styles')
+    @stack('addon-styles')
 </head>
 
 <body>
     @yield('content')
     @include('includes.scripts')
 
+    @stack('addon-scripts')
 </body>
 
 </html>

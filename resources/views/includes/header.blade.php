@@ -30,13 +30,26 @@
              <ul class="header-nav ms-3">
                  <li class="nav-item dropdown"><a class="nav-link py-0" data-coreui-toggle="dropdown" href="#"
                          role="button" aria-haspopup="true" aria-expanded="false">
-                         <div class="avatar avatar-md"><img class="avatar-img"
-                                 src="{{ url('assets/img/avatars/8.jpg') }}" alt="user@email.com"></div>
+                         <div class="avatar avatar-md">
+                             @if (Auth::user()->role != 'ADMIN')
+                                 <img class="avatar-img" src="{{ Storage::url(Auth::user()->foto_profil) }}"
+                                     onerror="this.onerror=null; this.src='{{ url('assets/img/user.png') }}'"
+                                     alt="Profil Image">
+                             @else
+                                 <img class="avatar-img" src="{{ url('assets/img/avatars/8.jpg') }}"
+                                     alt="user@email.com">
+                             @endif
+                         </div>
                      </a>
                      <div class="dropdown-menu dropdown-menu-end pt-0">
                          <div class="dropdown-header bg-light py-2">
                              <div class="fw-semibold">Settings</div>
                          </div>
+                         @if (Auth::user()->role != 'ADMIN')
+                             <a class="dropdown-item" href="{{ route('faskes.profile') }}">
+                                 <i class="fa-regular fa-user icon me-2"></i>Profile</a>
+                         @else
+                         @endif
                          <a class="dropdown-item" href="{{ route('password.request') }}">
                              <i class="fa-regular fa-unlock icon me-2"></i>Lupa Password</a>
                          <form action="{{ route('logout') }}" method="POST" class="dropdown-item ">
@@ -48,8 +61,8 @@
                  </li>
              </ul>
          </div>
-         <div class="header-divider"></div>
-         <div class="container-fluid">
+         {{-- <div class="header-divider"></div> --}}
+         {{-- <div class="container-fluid">
              <nav aria-label="breadcrumb">
                  <ol class="breadcrumb my-0 ms-2">
                      <li class="breadcrumb-item">
@@ -58,5 +71,5 @@
                      <li class="breadcrumb-item active"><span>Dashboard</span></li>
                  </ol>
              </nav>
-         </div>
+         </div> --}}
      </header>
