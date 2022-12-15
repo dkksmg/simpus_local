@@ -27,6 +27,10 @@ class Kunjungan extends Model
     {
         return $this->belongsTo(Poli::class, 'poli', 'kode_poli');
     }
+    public function detail_nakes()
+    {
+        return $this->belongsTo(Nakes::class, 'dokter', 'kode_nakes');
+    }
     public function detail_pemeriksaan()
     {
         return $this->hasOne(Pemeriksaan::class, 'id_kunjungan', 'kode_kunjungan');

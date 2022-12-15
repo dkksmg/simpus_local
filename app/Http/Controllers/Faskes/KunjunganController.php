@@ -87,6 +87,11 @@ class KunjunganController extends Controller
                                 <td width="20px">:</td>
                                 <td><input name="no_ihs" class="form-control-plaintext" value="' . $row->no_ihs . '" readonly/></td>
                                 </tr>
+                                <tr>
+                                <td>Asuransi</td>
+                                <td width="20px">:</td>
+                                <td><input name="asuransi" class="form-control-plaintext" value="' . $row->asuransi  . '" readonly/></td>
+                                </tr>
                                 </table>
                                  </div>
                                  <div class="col">
@@ -127,6 +132,11 @@ class KunjunganController extends Controller
                     }
                     $btn =  $btn . '</td>
                              </tr>
+                             <tr>
+                                <td>No Asuransi</td>
+                                <td width="20px">:</td>
+                                <td><input name="nomor_asuransi" class="form-control-plaintext" value="' . $row->nomor_asuransi  . '" readonly/></td>
+                                </tr>
                              </table>
                                  </div>
                                  </div>
@@ -357,7 +367,7 @@ class KunjunganController extends Controller
                 ];
                 // dd($data);
                 if (Kunjungan::create($data)) {
-                    return redirect()->route('faskes.catat.show', Crypt::encrypt($request->no_cm))->with('success', 'Data kunjungan disimpan');
+                    return redirect()->route('faskes.catat.show', Crypt::encrypt($request->kode_kunjungan))->with('success', 'Data kunjungan disimpan');
                 } else {
                     return redirect()->back()->with('errors', 'Data kunjungan disimpan');
                 }

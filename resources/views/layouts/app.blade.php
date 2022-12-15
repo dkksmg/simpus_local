@@ -19,6 +19,7 @@
     </div>
     @include('sweetalert::alert')
     @include('includes.scripts')
+    <div id="Popup"></div>
     @stack('addon-scripts')
 </body>
 

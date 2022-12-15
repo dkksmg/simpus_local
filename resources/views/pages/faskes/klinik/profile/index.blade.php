@@ -31,6 +31,19 @@
                                     <!-- Form Row-->
                                     <div class="row gx-3 mb-3">
                                         <div class="col-md-6">
+                                            <label class="small mb-1" for="inputFirstName">Kode Faskes</label>
+                                            <input
+                                                class="form-control-plaintext @error('nama_lengkap') is-invalid @enderror"
+                                                id="inputFirstName" type="text" value="{{ $faskes->kode_faskes }}"
+                                                name="nama_lengkap" readonly />
+                                            @error('nama_lengkap')
+                                                <div class="invalid-feedback" role="alert">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+
+                                    </div>
+                                    <div class="row gx-3 mb-3">
+                                        <div class="col-md-6">
                                             <label class="small mb-1" for="inputFirstName">Nama Faskes</label>
                                             <input
                                                 class="form-control-plaintext @error('nama_lengkap') is-invalid @enderror"

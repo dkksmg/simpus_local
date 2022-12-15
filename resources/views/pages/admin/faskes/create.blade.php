@@ -332,7 +332,6 @@
                     },
                     dataType: 'json',
                     success: function(data) {
-                        console.log(data)
                         $('[name=email_faskes]').val(data.data.email_faskes);
                         $('[name=nama_faskes]').val(data.data.nama_faskes);
                         $('[name=pj_faskes]').val(data.data.pj);

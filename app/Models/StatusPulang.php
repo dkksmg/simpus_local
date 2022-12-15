@@ -6,14 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class MasterKotaKab extends Model
+class StatusPulang extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['provinsi_id', 'kota'];
-
-    public function nama_kecamatan()
-    {
-        return $this->hasMany(MasterKecamatan::class, 'id', 'kota_id');
-    }
+    protected $fillable = [
+        'kode_status', 'nama_status', 'status'
+    ];
 }

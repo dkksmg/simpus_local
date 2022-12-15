@@ -16,6 +16,7 @@ use App\Http\Controllers\Faskes\TindakanController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\IcdController;
 
 /*
 |--------------------------------------------------------------------------
@@ -105,12 +106,18 @@ Route::prefix('faskes')->middleware(['auth', 'klinik',])
         Route::post('kunjungan', [KunjunganController::class, 'store'])->name('faskes.kunjungan.store');
         Route::delete('kunjungan/{id}', [KunjunganController::class, 'destroy'])->name('faskes.kunjungan.destroy');
         // Pemeriksaan
-        Route::get('catat-pasien/{id}', [RekamMedisController::class, 'show'])->name('faskes.catat.show');
+        Route::get('pemeriksaan/', [RekamMedisController::class, 'index'])->name('faskes.catat');
+        Route::get('pemeriksaan/pasien/{id}', [RekamMedisController::class, 'show'])->name('faskes.catat.show');
+        Route::get('pemeriksaan/pencarian', [RekamMedisController::class, 'carikunjungan'])->name('faskes.catat.cari');
+        Route::post('pemeriksaan', [RekamMedisController::class, 'store'])->name('faskes.catat.store');
     });
-
-Route::prefix('data')->middleware(['auth'])->group(function () {
-    Route::post('api/kelurahan-list', [AjaxDropdown::class, 'getKelurahan'])->name('data.kelurahan-list');
-    Route::post('api/kota-kab', [AjaxDropdown::class, 'fetchKotaKab'])->name('data.kota');
-    Route::post('api/kecamatan', [AjaxDropdown::class, 'fetchKecamatan'])->name('data.kecamatan');
-    Route::post('api/kelurahan', [AjaxDropdown::class, 'fetchKelurahan'])->name('data.kelurahan');
-});
+Route::prefix('faskes/data/ajax')->middleware(['auth', 'klinik'])
+    ->group(function () {
+        Route::post('api/kelurahan-list', [AjaxDropdown::class, 'getKelurahan'])->name('data.kelurahan-list');
+        Route::post('api/kota-kab', [AjaxDropdown::class, 'fetchKotaKab'])->name('data.kota');
+        Route::post('api/kecamatan', [AjaxDropdown::class, 'fetchKecamatan'])->name('data.kecamatan');
+        Route::post('api/kelurahan', [AjaxDropdown::class, 'fetchKelurahan'])->name('data.kelurahan');
+        Route::get('preview-icd', [IcdController::class, 'listICD'])->name('data.ajax.view-icd');
+        Route::get('popup-icd', [IcdController::class, 'popupICD'])->name('data.ajax.popup-icd');
+        Route::get('tampil-icd/{id}', [IcdController::class, 'tampilICD'])->name('data.ajax.tampil-icd');
+    });

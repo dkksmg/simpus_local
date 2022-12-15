@@ -62,12 +62,12 @@
                                 </div>
                                 <div class="row d-flex justify-content-center">
                                     <div class="col-md-1 me-2">
-                                        <div class="form-group row">
+                                        <div class="form-group row mt-3 mb-2">
                                             <button type="button" id="search" class="btn btn-success">Cari</button>
                                         </div>
                                     </div>
                                     <div class="col-md-1 me-2">
-                                        <div class="form-group row">
+                                        <div class="form-group row mt-3 mb-2">
                                             <button type="button" id="clear" class="btn btn-warning">Clear</button>
                                         </div>
                                     </div>

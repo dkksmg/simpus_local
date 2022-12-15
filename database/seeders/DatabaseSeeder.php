@@ -5,12 +5,15 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 use App\Models\User;
-use App\Helpers\Helpers;
 use App\Models\Faskes;
+use App\Helpers\Helpers;
 use App\Models\JabatanNakes;
+use App\Models\StatusPulang;
 use Illuminate\Database\Seeder;
+use Database\Seeders\JabatanSeeder;
 use Database\Seeders\KecamatanSeeder;
 use Database\Seeders\KelurahanSeeder;
+use Database\Seeders\KesadaranSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -23,6 +26,8 @@ class DatabaseSeeder extends Seeder
     {
         // \App\Models\User::factory(10)->create();
         $this->call(JabatanSeeder::class);
+        $this->call(StatusPulangSeeder::class);
+        $this->call(KesadaranSeeder::class);
         $this->call(KecamatanSeeder::class);
         $this->call(KelurahanSeeder::class);
         $kode = Helpers::KodeFaskes(1);

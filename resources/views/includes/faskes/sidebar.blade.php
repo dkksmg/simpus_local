@@ -45,9 +45,20 @@
                         List Pasien Berkunjung</a></li>
             </ul>
         </li>
-        <li class="nav-item"><a class="nav-link" href="{{ route('faskes.nakes') }}">
+        <li class="nav-group {{ Request::segment(2) == 'pemeriksaan' ? 'show' : '' }}"
+            aria-expanded="{{ Request::segment(2) == 'pemeriksaan' ? 'true' : 'false' }}">
+            <a class="nav-link nav-group-toggle" href="javascript:void(0)">
                 <i class="nav-icon fa-regular fa-books-medical"></i>
-                Catatan Medik</a></li>
+                Catatan Medik</a>
+            <ul class="nav-group-items">
+                <li class="nav-item"><a class="nav-link" href="{{ route('faskes.catat') }}">
+                        <i class="nav-icon fa-regular fa-circle-info"></i>
+                        Catat RM Pasien</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ route('faskes.catat') }}">
+                        <i class="nav-icon fa-regular fa-circle-info"></i>
+                        Riwayat Pasien</a></li>
+            </ul>
+        </li>
         <li class="nav-item"><a class="nav-link" href="{{ route('faskes.nakes') }}">
                 <i class="nav-icon fa-regular fa-book-copy"></i>
                 Laporan</a></li>
