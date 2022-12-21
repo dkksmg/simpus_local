@@ -54,7 +54,7 @@
                 <li class="nav-item"><a class="nav-link" href="{{ route('faskes.catat') }}">
                         <i class="nav-icon fa-regular fa-circle-info"></i>
                         Catat RM Pasien</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ route('faskes.catat') }}">
+                <li class="nav-item"><a class="nav-link" href="{{ route('faskes.catat.list') }}">
                         <i class="nav-icon fa-regular fa-circle-info"></i>
                         Riwayat Pasien</a></li>
             </ul>

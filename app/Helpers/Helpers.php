@@ -37,14 +37,16 @@ class Helpers
     {
         // $now = Carbon::now();
         // $date_now = $now->year . $now->month . $now->day;
+        $initial = preg_replace('/\b(\w)|./', '$1', Auth::user()->name);
+
         $cek = Nakes::where('kode_faskes', '=', $kode)->count();
         if ($cek == 0) {
             $urut = 101;
-            $nomer = $kode . 'NK' . $urut;
+            $nomer = $initial . 'NK' . $urut;
         } else {
             $ambil = Nakes::where('kode_faskes', '=', $kode)->orderBy('id', 'DESC')->first();
             $urut = (int)substr($ambil->kode_nakes, -3) + 1;
-            $nomer = $kode . 'NK' . $urut;
+            $nomer = $initial . 'NK' . $urut;
         }
         return $nomer;
     }
@@ -52,14 +54,15 @@ class Helpers
     {
         // $now = Carbon::now();
         // $date_now = $now->year . $now->month . $now->day;
+        $initial = preg_replace('/\b(\w)|./', '$1', Auth::user()->name);
         $cek = Obat::where('kode_faskes', '=', $kode)->count();
         if ($cek == 0) {
             $urut = 101;
-            $nomer = $kode . 'MED' . $urut;
+            $nomer = $initial . 'MED' . $urut;
         } else {
             $ambil = Obat::where('kode_faskes', '=', $kode)->orderBy('id', 'DESC')->first();
             $urut = (int)substr($ambil->kode_obat, -3) + 1;
-            $nomer = $kode . 'MED' . $urut;
+            $nomer = $initial . 'MED' . $urut;
         }
         return $nomer;
     }
@@ -67,14 +70,15 @@ class Helpers
     {
         // $now = Carbon::now();
         // $date_now = $now->year . $now->month . $now->day;
+        $initial = preg_replace('/\b(\w)|./', '$1', Auth::user()->name);
         $cek = Tindakan::where('kode_faskes', '=', $kode)->count();
         if ($cek == 0) {
             $urut = 101;
-            $nomer = $kode . 'TD' . $urut;
+            $nomer = $initial . 'TD' . $urut;
         } else {
             $ambil = Tindakan::where('kode_faskes', '=', $kode)->orderBy('id', 'DESC')->first();
             $urut = (int)substr($ambil->kode_tindakan, -3) + 1;
-            $nomer = $kode . 'TD' . $urut;
+            $nomer = $initial . 'TD' . $urut;
         }
         return $nomer;
     }
@@ -82,14 +86,15 @@ class Helpers
     {
         // $now = Carbon::now();
         // $date_now = $now->year . $now->month . $now->day;
+        $initial = preg_replace('/\b(\w)|./', '$1', Auth::user()->name);
         $cek = Poli::where('kode_faskes', '=', $kode)->count();
         if ($cek == 0) {
             $urut = 101;
-            $nomer = $kode . 'PL' . $urut;
+            $nomer = $initial . 'PL' . $urut;
         } else {
             $ambil = Poli::where('kode_faskes', '=', $kode)->orderBy('id', 'DESC')->first();
             $urut = (int)substr($ambil->kode_poli, -3) + 1;
-            $nomer = $kode . 'PL' . $urut;
+            $nomer = $initial . 'PL' . $urut;
         }
         return $nomer;
     }

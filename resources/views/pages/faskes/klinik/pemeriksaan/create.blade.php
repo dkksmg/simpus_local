@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @push('addon-styles')
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+    {{-- <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" /> --}}
+    {{-- <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" /> --}}
     <style>
         #penyakitPrim,
         #penyakitSek,
@@ -125,344 +125,385 @@
                     </div>
                 </div>
                 <div class="col-lg-12">
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <h4>Pemeriksaan</h4>
-                        </div>
-                        <div class="card-body mb-0">
-                            <div class="example">
-                                <div class="tab-content rounded-bottom">
-                                    <div class="tab-pane p-3 active preview" role="tabpanel">
-                                        <div class="row g-3">
-                                            <div class="table-responsive">
-                                                <table class="table table-borderless mb-3">
-                                                    <tr>
-                                                        <th colspan="2">Anamnesa</th>
-                                                        <td>:</td>
-                                                        <td colspan="2">
-                                                            <textarea rows="3" class="form-control" name="anamnesa">{{ old('anamnesa') }}</textarea>
-                                                        </td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th colspan="3">Pemeriksaan Klinis</th>
-                                                    </tr>
-                                                    <tr>
-                                                        <th rowspan="3" width="30px"></th>
-                                                        <td>Kesadaran</td>
-                                                        <td>:</td>
-                                                        <td>
-                                                            <select name="kesadaran" class="form-select">
-                                                                <option></option>
-                                                                @foreach ($kesadaran as $kes)
-                                                                    <option value="{{ $kes->kode_kesadaran }}">
-                                                                        {{ $kes->nama_kesadaran }}</option>
-                                                                @endforeach
-                                                            </select>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Berat Badan</td>
-                                                        <td>:</td>
-                                                        <td>
-                                                            <div class="input-group">
-                                                                <input type="text" id="beratBadan" name="beratBadan"
-                                                                    value="{{ old('beratBadan') }}" class="form-control"
-                                                                    onchange="IMT()">
-                                                                <div class="input-group-append">
-                                                                    <span class="input-group-text">Kg</span>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                        <td>Tinggi Badan</td>
-                                                        <td>:</td>
-                                                        <td>
-                                                            <div class="input-group">
-                                                                <input type="text" id="tinggiBadan" name="tinggiBadan"
-                                                                    value="{{ old('tinggiBadan') }}" class="form-control"
-                                                                    onchange="IMT()">
-                                                                <div class="input-group-append">
-                                                                    <span class="input-group-text">Cm</span>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>IMT </td>
-                                                        <td>:</td>
-                                                        <td>
-                                                            <input type="text" id="imt" class="form-control"
-                                                                readonly name="IMT" value="{{ old('IMT') }}">
-                                                        </td>
-                                                        <td>Lingkar Perut</td>
-                                                        <td>:</td>
-                                                        <td><input type="text" name="lingkarPerut"
-                                                                value="{{ old('lingkarPerut') }}" class="form-control">
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th colspan="3">Tanda Vital</th>
-                                                    </tr>
-                                                    <tr>
-                                                        <th rowspan="4" width="30px"></th>
-                                                        <td>Suhu</td>
-                                                        <td>:</td>
-                                                        <td>
-                                                            <div class="input-group">
-                                                                <input type="text" name="suhu"
-                                                                    value="{{ old('suhu') }}" class="form-control">
-                                                                <div class="input-group-append">
-                                                                    <span class="input-group-text"><sup>o</sup>C</span>
-                                                                </div>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Tekanan Darah</td>
-                                                        <td>:</td>
-                                                        <td colspan="4" width="">
-                                                            <div class="input-group">
-                                                                <input type="text" name="sistole"
-                                                                    value="{{ old('sistole') }}" class="form-control"
-                                                                    placeholder="sistole"> /
-                                                                <input type="text" name="diastole"
-                                                                    value="{{ old('diastole') }}" class="form-control"
-                                                                    placeholder="diastole">
-                                                                <div class="input-group-append">
-                                                                    <span class="input-group-text">mmHg</span>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            Respiratory Rate</td>
-                                                        <td>:</td>
-                                                        <td>
-                                                            <div class="input-group">
-                                                                <input type="text" name="respRate"
-                                                                    value="{{ old('respRate') }}" class="form-control">
-                                                                <div class="input-group-append">
-                                                                    <span class="input-group-text">/menit</span>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-
-                                                        <td>Heart Rate</td>
-                                                        <td>:</td>
-                                                        <td>
-                                                            <div class="input-group">
-                                                                <input type="text" name="heartRate"
-                                                                    value="{{ old('heartRate') }}" class="form-control">
-                                                                <div class="input-group-append">
-                                                                    <span class="input-group-text">bpm</span>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                </table>
-                                                <hr>
+                    <form action="{{ route('faskes.catat.store') }}" class="form-inline" method="POST">
+                        @csrf
+                        {{ Form::hidden('kunjungan', Request::segment(4)) }}
+                        {{ Form::hidden('no_cm', $data->no_cm) }}
+                        {{ Form::hidden('poli', $data->poli) }}
+                        {{ Form::hidden('tgl_kunjungan', $data->tgl_kunjungan) }}
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h4>Pemeriksaan</h4>
+                            </div>
+                            <div class="card-body mb-0">
+                                <div class="example">
+                                    <div class="tab-content rounded-bottom">
+                                        <div class="tab-pane p-3 active preview" role="tabpanel">
+                                            <div class="row g-3">
                                                 <div class="table-responsive">
-
-                                                    <table class="table table-borderless">
+                                                    <table class="table table-borderless mb-3">
                                                         <tr>
-                                                            <th>Pemeriksaan Fisik</th>
+                                                            <th colspan="2">Anamnesa</th>
+                                                            <td>:</td>
+                                                            <td colspan="2">
+                                                                <textarea rows="3" class="form-control" name="anamnesa">{{ old('anamnesa') }}</textarea>
+                                                            </td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th colspan="3">Pemeriksaan Klinis</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <th rowspan="3" width="30px"></th>
+                                                            <td>Kesadaran</td>
                                                             <td>:</td>
                                                             <td>
-                                                                <textarea class="form-control" name="pemeriksaanFisik"><?= isset($cm['pemeriksaanFisik']) ? $cm['pemeriksaanFisik'] : '' ?></textarea>
-                                                            </td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th>Diagnosa</th>
-                                                            <td>:</td>
-                                                            <td colspan="4">
-                                                                <div id="icdRow1">
-                                                                    <div class="input-group mb-3">
-                                                                        <input type="text" id="icdx1"
-                                                                            name="diag1"
-                                                                            value="<?= isset($cm['diag1']) ? $cm['diag1'] : '' ?>"
-                                                                            class="form-control"
-                                                                            style="max-width: 16%;text-transform: uppercase;"
-                                                                            onchange="diagnosaName(this.value,1)" />
-                                                                        <input type="text" id="penyakit1"
-                                                                            value="" class="form-control" readonly>
-                                                                        <div class="input-group-append">
-                                                                            <button class="btn btn-outline-primary"
-                                                                                type="button"
-                                                                                onclick="diagnosaDaftar(1)">...</button>
-                                                                            <button class="btn btn-outline-warning"
-                                                                                type="button" onclick="tambahDiagnosa()"
-                                                                                id="btnTambahDiag"
-                                                                                data-diagNext="2">+</button>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div id="icdRow2"
-                                                                    <?= isset($cm['diag2']) && $cm['diag2'] != '' ? '' : "style='display: none;'" ?>>
-                                                                    <div class="input-group mb-3">
-                                                                        <input type="text" id="icdx2"
-                                                                            name="diag2"
-                                                                            value="<?= isset($cm['diag2']) ? $cm['diag2'] : '' ?>"
-                                                                            class="form-control"
-                                                                            style="max-width: 16%;text-transform: uppercase;"
-                                                                            onchange="diagnosaName(this.value,2)" />
-                                                                        <input type="text" id="penyakit2"
-                                                                            value="" class="form-control" readonly>
-                                                                        <div class="input-group-append">
-                                                                            <button class="btn btn-outline-primary"
-                                                                                type="button"
-                                                                                onclick="diagnosaDaftar(2)">...</button>
-                                                                            <button class="btn btn-outline-warning"
-                                                                                type="button" onclick="hideDiagnosa(2)">
-                                                                                -
-                                                                            </button>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div id="icdRow3"
-                                                                    <?= isset($cm['diag3']) && $cm['diag3'] != '' ? '' : "style='display: none;'" ?>>
-                                                                    <div class="input-group mb-3">
-                                                                        <input type="text" id="icdx3"
-                                                                            name="diag3"
-                                                                            value="<?= isset($cm['diag3']) ? $cm['diag3'] : '' ?>"
-                                                                            class="form-control"
-                                                                            style="max-width: 16%;text-transform: uppercase;"
-                                                                            onchange="diagnosaName(this.value,3)" />
-                                                                        <input type="text" id="penyakit3"
-                                                                            value="" class="form-control" readonly>
-                                                                        <div class="input-group-append">
-                                                                            <button class="btn btn-outline-primary"
-                                                                                type="button"
-                                                                                onclick="diagnosaDaftar(3)">...</button>
-                                                                            <button class="btn btn-outline-warning"
-                                                                                type="button" onclick="hideDiagnosa(3)">
-                                                                                -
-                                                                            </button>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th colspan="6">
-                                                                <hr>
-                                                            </th>
-                                                        </tr>
-                                                        <tr>
-                                                            <th>Tindakan</th>
-                                                            <td>:</td>
-                                                            <td colspan="4">
-                                                                <div id="RowTindakan">
-                                                                    <div id="RowTindakan1">
-                                                                        <div class="input-group mb-3">
-                                                                            <input type="text" id="kodeTindakan1"
-                                                                                name="tindakan[]" value=""
-                                                                                class="form-control"
-                                                                                style="max-width: 16%">
-                                                                            <input type="text" id="Tindakan1"
-                                                                                value="" class="form-control"
-                                                                                readonly>
-                                                                            <div class="input-group-append">
-                                                                                <button class="btn btn-outline-primary"
-                                                                                    type="button"
-                                                                                    onclick="tindakanDaftar(1)">...</button>
-                                                                                <button class="btn btn-outline-warning"
-                                                                                    id="tambahTindakanId" type="button"
-                                                                                    onclick="tambahTindakan(2)">+</button>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th colspan="6">
-                                                                <hr>
-                                                            </th>
-                                                        </tr>
-                                                        <tr>
-                                                            <th>Obat</th>
-                                                            <td>:</td>
-                                                            <td colspan="4">
-                                                                <div id="RowObat">
-                                                                    <div id="RowObat1">
-                                                                        <div class="input-group mb-3">
-                                                                            <input type="text" name="obat[]"
-                                                                                id="obat1" value=""
-                                                                                class="form-control"
-                                                                                style="max-width: 16%">
-                                                                            <input type="text" value=""
-                                                                                id="namaObat1" class="form-control"
-                                                                                readonly>
-                                                                            <div class="input-group-append">
-                                                                                <button class="btn btn-outline-primary"
-                                                                                    type="button"
-                                                                                    onclick="obatDaftar(1)">...</button>
-                                                                                <button class="btn btn-outline-warning"
-                                                                                    id="tambahObatId" type="button"
-                                                                                    onclick="tambahObat(2)">+</button>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="input-group mb-3">
-                                                                            Dosis :
-                                                                            <input type="text" id="dosis1"
-                                                                                name="dosis[]" class="form-control">
-                                                                            Jumlah :
-                                                                            <input type="text" id="jumlah1"
-                                                                                name="jumlah[]" class="form-control">
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th colspan="6">
-                                                                <hr>
-                                                            </th>
-                                                        </tr>
-                                                        <tr>
-                                                            <th>Status Pulang</th>
-                                                            <td>:</td>
-                                                            <td>
-                                                                <select name="statusPulang" class="form-select">
+                                                                <select name="kesadaran" class="form-select">
                                                                     <option></option>
-                                                                    @foreach ($status as $st)
-                                                                        <option value="{{ $st->kode_status }}"
-                                                                            {{ (($st->kode_status == 'planned'
-                                                                                        ? 'disabled'
-                                                                                        : '' || $st->kode_status == 'arrived')
-                                                                                    ? 'disabled'
-                                                                                    : '' || $st->kode_status == 'cancelled')
-                                                                                ? 'disabled'
-                                                                                : '' }}>
-                                                                            {{ $st->nama_status }}</option>
+                                                                    @foreach ($kesadaran as $kes)
+                                                                        <option value="{{ $kes->kode_kesadaran }}">
+                                                                            {{ $kes->nama_kesadaran }}</option>
                                                                     @endforeach
                                                                 </select>
                                                             </td>
                                                         </tr>
                                                         <tr>
-                                                            <th>Pemeriksa</th>
+                                                            <td>Berat Badan</td>
                                                             <td>:</td>
                                                             <td>
-                                                                <select name="pemeriksa" class="form-select">
-                                                                    <option value=""></option>
-                                                                    @foreach ($nakes as $nk)
-                                                                        <option value="{{ $nk->kode_nakes }}">
-                                                                            {{ $nk->nama_nakes }}</option>
-                                                                    @endforeach
-                                                                </select>
+                                                                <div class="input-group">
+                                                                    <input type="text" id="beratBadan" name="beratBadan"
+                                                                        value="{{ old('beratBadan') }}"
+                                                                        class="form-control" onchange="IMT()">
+                                                                    <div class="input-group-append">
+                                                                        <span class="input-group-text">Kg</span>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td>Tinggi Badan</td>
+                                                            <td>:</td>
+                                                            <td>
+                                                                <div class="input-group">
+                                                                    <input type="text" id="tinggiBadan"
+                                                                        name="tinggiBadan" value="{{ old('tinggiBadan') }}"
+                                                                        class="form-control" onchange="IMT()">
+                                                                    <div class="input-group-append">
+                                                                        <span class="input-group-text">Cm</span>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
                                                         </tr>
                                                         <tr>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td class="text-center"><button type="submit"
-                                                                    class="btn btn-success">Simpan</button>
+                                                            <td>IMT </td>
+                                                            <td>:</td>
+                                                            <td>
+                                                                <input type="text" id="imt" class="form-control"
+                                                                    readonly name="imt" value="{{ old('IMT') }}">
                                                             </td>
+                                                            <td>Lingkar Perut</td>
+                                                            <td>:</td>
+                                                            <td><input type="text" name="lingkarPerut"
+                                                                    value="{{ old('lingkarPerut') }}" class="form-control">
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th colspan="3">Tanda Vital</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <th rowspan="4" width="30px"></th>
+                                                            <td>Suhu</td>
+                                                            <td>:</td>
+                                                            <td>
+                                                                <div class="input-group">
+                                                                    <input type="text" name="suhu"
+                                                                        value="{{ old('suhu') }}" class="form-control">
+                                                                    <div class="input-group-append">
+                                                                        <span class="input-group-text"><sup>o</sup>C</span>
+                                                                    </div>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Tekanan Darah</td>
+                                                            <td>:</td>
+                                                            <td colspan="4" width="">
+                                                                <div class="input-group">
+                                                                    <input type="text" name="sistole"
+                                                                        value="{{ old('sistole') }}" class="form-control"
+                                                                        placeholder="sistole"> /
+                                                                    <input type="text" name="diastole"
+                                                                        value="{{ old('diastole') }}" class="form-control"
+                                                                        placeholder="diastole">
+                                                                    <div class="input-group-append">
+                                                                        <span class="input-group-text">mmHg</span>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                Respiratory Rate</td>
+                                                            <td>:</td>
+                                                            <td>
+                                                                <div class="input-group">
+                                                                    <input type="text" name="respRate"
+                                                                        value="{{ old('respRate') }}"
+                                                                        class="form-control">
+                                                                    <div class="input-group-append">
+                                                                        <span class="input-group-text">/menit</span>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+
+                                                            <td>Heart Rate</td>
+                                                            <td>:</td>
+                                                            <td>
+                                                                <div class="input-group">
+                                                                    <input type="text" name="heartRate"
+                                                                        value="{{ old('heartRate') }}"
+                                                                        class="form-control">
+                                                                    <div class="input-group-append">
+                                                                        <span class="input-group-text">bpm</span>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
                                                     </table>
+                                                    <hr>
+                                                    <div class="table-responsive">
+
+                                                        <table class="table table-borderless">
+                                                            <tr>
+                                                                <th>Pemeriksaan Fisik</th>
+                                                                <td>:</td>
+                                                                <td>
+                                                                    <textarea class="form-control" name="pemeriksaanFisik"><?= isset($cm['pemeriksaanFisik']) ? $cm['pemeriksaanFisik'] : '' ?></textarea>
+                                                                </td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Diagnosa</th>
+                                                                <td>:</td>
+                                                                <td colspan="4">
+                                                                    <div id="icdRow1">
+                                                                        <div class="input-group mb-3">
+                                                                            <input type="text" id="icdx1"
+                                                                                name="diag1" required
+                                                                                value="<?= isset($cm['diag1']) ? $cm['diag1'] : '' ?>"
+                                                                                class="form-control"
+                                                                                style="max-width: 16%;text-transform: uppercase;"
+                                                                                onchange="diagnosaName(this.value,1)"
+                                                                                placeholder="ICD-10" />
+                                                                            <input type="text" id="penyakit1"
+                                                                                value="" class="form-control"
+                                                                                readonly placeholder="Display Diagnosa">
+                                                                            <div class="input-group-append">
+                                                                                <button class="btn btn-outline-primary"
+                                                                                    type="button"
+                                                                                    onclick="diagnosaDaftar(1)">...</button>
+                                                                                <button class="btn btn-outline-warning"
+                                                                                    type="button"
+                                                                                    onclick="tambahDiagnosa()"
+                                                                                    id="btnTambahDiag"
+                                                                                    data-diagNext="2">+</button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div id="icdRow2"
+                                                                        <?= isset($cm['diag2']) && $cm['diag2'] != '' ? '' : "style='display: none;'" ?>>
+                                                                        <div class="input-group mb-3">
+                                                                            <input type="text" id="icdx2"
+                                                                                name="diag2"
+                                                                                value="<?= isset($cm['diag2']) ? $cm['diag2'] : '' ?>"
+                                                                                class="form-control"
+                                                                                style="max-width: 16%;text-transform: uppercase;"
+                                                                                onchange="diagnosaName(this.value,2)"
+                                                                                placeholder="ICD-10" />
+                                                                            <input type="text" id="penyakit2"
+                                                                                value="" class="form-control"
+                                                                                readonly placeholder="Display Diagnosa">
+                                                                            <div class="input-group-append">
+                                                                                <button class="btn btn-outline-primary"
+                                                                                    type="button"
+                                                                                    onclick="diagnosaDaftar(2)">...</button>
+                                                                                <button class="btn btn-outline-warning"
+                                                                                    type="button"
+                                                                                    onclick="hideDiagnosa(2)">
+                                                                                    -
+                                                                                </button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div id="icdRow3"
+                                                                        <?= isset($cm['diag3']) && $cm['diag3'] != '' ? '' : "style='display: none;'" ?>>
+                                                                        <div class="input-group mb-3">
+                                                                            <input type="text" id="icdx3"
+                                                                                name="diag3"
+                                                                                value="<?= isset($cm['diag3']) ? $cm['diag3'] : '' ?>"
+                                                                                class="form-control"
+                                                                                style="max-width: 16%;text-transform: uppercase;"
+                                                                                onchange="diagnosaName(this.value,3)"
+                                                                                placeholder="ICD-10" />
+                                                                            <input type="text" id="penyakit3"
+                                                                                value="" class="form-control"
+                                                                                readonly placeholder="Display Diagnosa">
+                                                                            <div class="input-group-append">
+                                                                                <button class="btn btn-outline-primary"
+                                                                                    type="button"
+                                                                                    onclick="diagnosaDaftar(3)">...</button>
+                                                                                <button class="btn btn-outline-warning"
+                                                                                    type="button"
+                                                                                    onclick="hideDiagnosa(3)">
+                                                                                    -
+                                                                                </button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th colspan="6">
+                                                                    <hr>
+                                                                </th>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Tindakan</th>
+                                                                <td>:</td>
+                                                                <td colspan="4">
+                                                                    <div id="RowTindakan">
+                                                                        <div id="RowTindakan1">
+                                                                            <div class="input-group mb-3">
+                                                                                <input type="text" id="kodeTindakan1"
+                                                                                    name="tindakan[]" value=""
+                                                                                    class="form-control"
+                                                                                    style="max-width: 16%"
+                                                                                    placeholder="Kode Tindakan">
+                                                                                <input type="text" id="Tindakan1"
+                                                                                    value="" class="form-control"
+                                                                                    readonly
+                                                                                    placeholder="Display Tindakan">
+                                                                                <div class="input-group-append">
+                                                                                    <button class="btn btn-outline-primary"
+                                                                                        type="button"
+                                                                                        onclick="tindakanDaftar(1)">...</button>
+                                                                                    <button class="btn btn-outline-warning"
+                                                                                        id="tambahTindakanId"
+                                                                                        type="button"
+                                                                                        onclick="tambahTindakan(2)">+</button>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th colspan="6">
+                                                                    <hr>
+                                                                </th>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Obat</th>
+                                                                <td>:</td>
+                                                                <td colspan="4">
+                                                                    <div id="RowObat">
+                                                                        <div id="RowObat1">
+                                                                            <div class="input-group mb-3">
+                                                                                <input type="text" name="obat[]"
+                                                                                    id="obat1" value=""
+                                                                                    class="form-control"
+                                                                                    style="max-width: 16%"
+                                                                                    placeholder="Kode Obat">
+                                                                                <input type="text" value=""
+                                                                                    id="namaObat1" class="form-control"
+                                                                                    readonly placeholder="Display Obat">
+                                                                                <div class="input-group-append">
+                                                                                    <button class="btn btn-outline-primary"
+                                                                                        type="button"
+                                                                                        onclick="obatDaftar(1)">...</button>
+                                                                                    <button class="btn btn-outline-warning"
+                                                                                        id="tambahObatId" type="button"
+                                                                                        onclick="tambahObat(2)">+</button>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="input-group mb-3">
+                                                                                Dosis :
+                                                                                <input type="text" id="dosis1"
+                                                                                    name="dosis[]" class="form-control">
+                                                                                Jumlah :
+                                                                                <input type="text" id="jumlah1"
+                                                                                    name="jumlah[]" class="form-control">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th colspan="6">
+                                                                    <hr>
+                                                                </th>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Edukasi</th>
+                                                                <td>:</td>
+                                                                <td>
+                                                                    <textarea class="form-control" name="edukasi">{{ old('edukasi') }}</textarea>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Klasifikasi Pemeriksaan</th>
+                                                                <td>:</td>
+                                                                <td>
+                                                                    <select name="status_pemeriksaan" class="form-select">
+                                                                        <option></option>
+                                                                        <option value="amb">Ambulatory</option>
+                                                                        <option value="vr">Virtual</option>
+                                                                    </select>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Status Pulang</th>
+                                                                <td>:</td>
+                                                                <td>
+                                                                    <select name="statusPulang" class="form-select">
+                                                                        <option></option>
+                                                                        @foreach ($status as $st)
+                                                                            <option value="{{ $st->kode_status }}"
+                                                                                {{ (($st->kode_status == 'planned'
+                                                                                            ? 'disabled'
+                                                                                            : '' || $st->kode_status == 'arrived')
+                                                                                        ? 'disabled'
+                                                                                        : '' || $st->kode_status == 'cancelled')
+                                                                                    ? 'disabled'
+                                                                                    : '' }}>
+                                                                                {{ $st->nama_status }}</option>
+                                                                        @endforeach
+                                                                    </select>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Pemeriksa</th>
+                                                                <td>:</td>
+                                                                <td>
+                                                                    <select name="pemeriksa" class="form-select">
+                                                                        <option value=""></option>
+                                                                        @foreach ($nakes as $nk)
+                                                                            <option value="{{ $nk->kode_nakes }}"
+                                                                                {{ $nk->kode_nakes == $data->dokter ? 'selected' : '' }}>
+                                                                                {{ $nk->nama_nakes }}</option>
+                                                                        @endforeach
+                                                                    </select>
+                                                            </tr>
+                                                            <tr>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td class="text-center"><button type="submit"
+                                                                        class="btn btn-success">Simpan</button>
+                                                                </td>
+                                                        </table>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -470,7 +511,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -481,14 +522,14 @@
     </div>
 @endsection
 @push('addon-scripts')
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     {{-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script> --}}
-    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-    {{-- <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script> --}}
-    {{-- <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script> --}}
-    <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap4.min.js"></script>
+    {{-- <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script> --}}
     {{-- <script src="https://coreui.io/demos/bootstrap/4.3/default-v3/js/datatables.js"></script> --}}
+    {{-- <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script> --}}
+    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap4.min.js"></script>
+    {{-- <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script> --}}
+    {{-- <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> --}}
     <script>
         if ($("#beratBadan").val() != '') {
             IMT();
@@ -537,6 +578,7 @@
             $.get('{{ route('data.ajax.tampil-icd', '') }}' + '/' + ke,
                 function(data) {
                     $("#Popup").html(data);
+                    // jQuery.noConflict();
                     $("#diagnosaDaftar").modal('show');
                 })
         }
@@ -563,9 +605,10 @@
         }
 
         function tindakanDaftar(ke) {
-            $.get(base_url + 'popup/tindakan/tampil/' + ke,
+            $.get('{{ route('data.ajax.tampil-tindakan', '') }}' + '/' + ke,
                 function(data) {
                     $("#Popup").html(data);
+                    // jQuery.noConflict();
                     $("#tindakanDaftar").modal('show');
                 })
         }
@@ -574,8 +617,9 @@
             next = ke + 1;
             append = '<div id="RowTindakan' + ke + '"><div class="input-group mb-3">' +
                 '<input type="text" id="kodeTindakan' + ke +
-                '" name="tindakan[]" value="" class="form-control" style="max-width: 16%">' +
-                '<input type="text" id="Tindakan' + ke + '" value="" class="form-control" readonly>' +
+                '" name="tindakan[]" placeholder="Kode Tindakan" value="" class="form-control" style="max-width: 16%">' +
+                '<input type="text" id="Tindakan' + ke +
+                '" value="" placeholder="Display Tindakan" class="form-control" readonly>' +
                 '<div class="input-group-append">' +
                 '<button class="btn btn-outline-primary" type="button" onclick="tindakanDaftar(' + ke +
                 ')">...</button>' +
@@ -592,9 +636,10 @@
         }
 
         function obatDaftar(ke) {
-            $.get(base_url + 'popup/obat/tampil/' + ke,
+            $.get('{{ route('data.ajax.tampil-obat', '') }}' + '/' + ke,
                 function(data) {
                     $("#Popup").html(data);
+                    // jQuery.noConflict();
                     $("#obatDaftar").modal('show');
                 })
         }
@@ -602,9 +647,10 @@
         function tambahObat(ke) {
             next = ke + 1;
             append = '<div id="RowObat' + ke + '"><div class="input-group mb-3">' +
-                '<input type="text" id="obat' + ke +
+                '<input type="text" placehoder="Kode Obat" id="obat' + ke +
                 '" name="obat[]" value="" class="form-control" style="max-width: 16%">' +
-                '<input type="text" id="namaObat' + ke + '" value="" class="form-control" readonly>' +
+                '<input type="text" placeholder="Display Obat" id="namaObat' + ke +
+                '" value="" class="form-control" readonly>' +
                 '<div class="input-group-append">' +
                 '<button class="btn btn-outline-primary" type="button" onclick="obatDaftar(' + ke + ')">...</button>' +
                 '<button class="btn btn-outline-warning" type="button" onclick="hapusObat(' + ke + ')">-</button>' +
@@ -686,4 +732,7 @@
                 })
         }
     </script>
+    {{-- <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script> --}}
+
+    {{-- <script src="{{ url('vendors/@coreui/coreui/js/coreui.bundle.min.js') }}"></script> --}}
 @endpush

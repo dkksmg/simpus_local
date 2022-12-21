@@ -8,13 +8,13 @@
 @section('content')
     <div class="body flex-grow-1 px-3">
         <div class="container-lg">
-            <div class="fs-2 fw-semibold">List Kunjungan</div>
+            <div class="fs-2 fw-semibold">Pasien Selesai Dilayani</div>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-4">
                     <li class="breadcrumb-item">
                         <a href="{{ url('/') }}" class="text-decoration-none">Home</a>
                     </li>
-                    <li class="breadcrumb-item active"><span>List Kunjungan Pasien</span></li>
+                    <li class="breadcrumb-item active"><span>List Selesai</span></li>
                 </ol>
             </nav>
             <div class="card mb-4">
@@ -42,6 +42,9 @@
                 </div>
             </div>
             <div class="card mb-4">
+                <div class="card-header">
+                    <h3>List Pasien</h3>
+                </div>
                 <div class="card-body">
                     <div class="example">
                         <div class="tab-content rounded-bottom">
@@ -132,7 +135,7 @@
             }
             $.ajax({
                 type: 'get',
-                url: '{{ route('faskes.kunjungan.data-list') }}',
+                url: '{{ route('faskes.catat.data-list') }}',
                 data: {
                     tgl: tanggal,
                 },
@@ -150,7 +153,7 @@
                                     data: 'tgl_kunjungan',
                                 },
                                 {
-                                    data: 'status_kunjungan'
+                                    data: 'status_pasien'
 
                                 }, {
                                     data: 'no_cm'

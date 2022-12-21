@@ -34,6 +34,7 @@ return new class extends Migration
             $table->string('suhu');
             $table->string('tb');
             $table->string('bb');
+            $table->string('imt');
             $table->string('respiratory_rate');
             $table->string('heart_rate');
             $table->string('lingkar_perut');

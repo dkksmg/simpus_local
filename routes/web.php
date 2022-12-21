@@ -107,9 +107,13 @@ Route::prefix('faskes')->middleware(['auth', 'klinik',])
         Route::delete('kunjungan/{id}', [KunjunganController::class, 'destroy'])->name('faskes.kunjungan.destroy');
         // Pemeriksaan
         Route::get('pemeriksaan/', [RekamMedisController::class, 'index'])->name('faskes.catat');
+        Route::get('pemeriksaan-old', [RekamMedisController::class, 'old'])->name('faskes.catat.old');
         Route::get('pemeriksaan/pasien/{id}', [RekamMedisController::class, 'show'])->name('faskes.catat.show');
+        Route::get('pemeriksaan/pasien/{id}/edit', [RekamMedisController::class, 'edit'])->name('faskes.catat.edit');
         Route::get('pemeriksaan/pencarian', [RekamMedisController::class, 'carikunjungan'])->name('faskes.catat.cari');
         Route::post('pemeriksaan', [RekamMedisController::class, 'store'])->name('faskes.catat.store');
+        Route::get('pemeriksaan/selesai', [RekamMedisController::class, 'riwayatPasien'])->name('faskes.catat.list');
+        Route::get('pemeriksaan/data/list-selesai', [RekamMedisController::class, 'listPasienSelesai'])->name('faskes.catat.data-list');
     });
 Route::prefix('faskes/data/ajax')->middleware(['auth', 'klinik'])
     ->group(function () {
@@ -120,4 +124,8 @@ Route::prefix('faskes/data/ajax')->middleware(['auth', 'klinik'])
         Route::get('preview-icd', [IcdController::class, 'listICD'])->name('data.ajax.view-icd');
         Route::get('popup-icd', [IcdController::class, 'popupICD'])->name('data.ajax.popup-icd');
         Route::get('tampil-icd/{id}', [IcdController::class, 'tampilICD'])->name('data.ajax.tampil-icd');
+        Route::get('popup-tindakan', [IcdController::class, 'popupTindakan'])->name('data.ajax.popup-tindakan');
+        Route::get('tampil-tindakan/{id}', [IcdController::class, 'tampilTindakan'])->name('data.ajax.tampil-tindakan');
+        Route::get('popup-obat', [IcdController::class, 'popupObat'])->name('data.ajax.popup-obat');
+        Route::get('tampil-obat/{id}', [IcdController::class, 'tampilObat'])->name('data.ajax.tampil-obat');
     });
