@@ -32,7 +32,7 @@
                          role="button" aria-haspopup="true" aria-expanded="false">
                          <div class="avatar avatar-md">
                              @if (Auth::user()->role != 'ADMIN')
-                                 <img class="avatar-img" src="{{ Storage::url(Auth::user()->foto_profil) }}"
+                                 <img class="avatar-img" src="{{ url('/storage/' . Auth::user()->foto_profil) }}"
                                      onerror="this.onerror=null; this.src='{{ url('assets/img/user.png') }}'"
                                      alt="Profil Image">
                              @else

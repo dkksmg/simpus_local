@@ -13,16 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('master_kelurahans', function (Blueprint $table) {
+        Schema::create('pelayanan_kliniks', function (Blueprint $table) {
             $table->id();
-            $table->string('kode_provinsi');
-            $table->string('kode_kotakab');
-            $table->string('kode_kecamatan');
-            $table->string('kode_kelurahan');
-            $table->string('nama');
+            $table->string('nama_pelayanan');
             $table->timestamps();
             $table->softDeletes();
-            // $table->foreign('kecamatan_id')->references('id')->on('master_kecamatans')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 
@@ -33,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('master_kelurahans');
+        Schema::dropIfExists('pelayanan_kliniks');
     }
 };

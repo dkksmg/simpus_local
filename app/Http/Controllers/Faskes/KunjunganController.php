@@ -17,29 +17,34 @@ use Illuminate\Support\Facades\Validator;
 
 class KunjunganController extends Controller
 {
+    function queryPasien()
+    {
+        $pasien = Pasien::query()->with(['detail_provinsi', 'detail_kotakab', 'detail_kecamatan', 'detail_kelurahan', 'history_last']);
+        return $pasien;
+    }
 
     public function caripasien(Request $request)
     {
         if ($request->ajax()) {
             if (!empty($request->namaPasien) && !empty($request->noCM) && !empty($request->nik))
-                $pasien = Pasien::with(['detail_provinsi', 'detail_kotakab', 'detail_kecamatan', 'detail_kelurahan', 'history_last'])
+                $pasien = $this->queryPasien()
                     ->where('kode_faskes', '=', Auth::user()->kode_faskes)
                     ->where('nama_pasien', 'LIKE', '%' . $request->namaPasien . '%')
                     ->orWhere('no_cm', '=', $request->noCM)
                     ->orWhere('nik', '=', $request->nik)
                     ->get();
             else if (!empty($request->namaPasien)) {
-                $pasien = Pasien::with(['detail_provinsi', 'detail_kotakab', 'detail_kecamatan', 'detail_kelurahan', 'history_last'])
+                $pasien = $this->queryPasien()
                     ->where('kode_faskes', '=', Auth::user()->kode_faskes)
                     ->where('nama_pasien', 'LIKE', '%' . $request->namaPasien . '%')
                     ->get();
             } else if (!empty($request->noCM)) {
-                $pasien = Pasien::with(['detail_provinsi', 'detail_kotakab', 'detail_kecamatan', 'detail_kelurahan', 'history_last'])
+                $pasien = $this->queryPasien()
                     ->where('kode_faskes', '=', Auth::user()->kode_faskes)
                     ->where('no_cm', '=', $request->noCM)
                     ->get();
             } else if (!empty($request->nik)) {
-                $pasien = Pasien::with(['detail_provinsi', 'detail_kotakab', 'detail_kecamatan', 'detail_kelurahan', 'history_last'])
+                $pasien = $this->queryPasien()
                     ->where('kode_faskes', '=', Auth::user()->kode_faskes)
                     ->where('nik', '=', $request->nik)
                     ->get();
@@ -148,8 +153,8 @@ class KunjunganController extends Controller
                                             <input type="date" name="tgl_kunjungan" value="' . Carbon::now()->format('Y-m-d') . '" class="form-control">
                                          </div>
                                          <div class="col-lg-4">
-      <div data-coreui-date="2023/03/15" data-coreui-locale="en-US" data-coreui-toggle="date-picker"></div>
-    </div>
+                                        <div data-coreui-date="2023/03/15" data-coreui-locale="en-US" data-coreui-toggle="date-picker"></div>
+                                        </div>
                                     </div>
                                     <div class="form-group row mb-2">
                                     <label for="poli" class="col-sm-2">Poli</label>
@@ -224,10 +229,10 @@ class KunjunganController extends Controller
                     $formatedDate = $data->tmp_lahir . ', ' . Carbon::parse($data->tgl_lahir)->translatedformat('d F Y');
                     return $formatedDate;
                 })
-                ->editColumn('alamat', function ($data) {
-                    $loc = $data->alamat . ' ' . (strtolower($data->detail_kotakab->kota . ', Kecamatan ' . $data->detail_kecamatan->kecamatan . ', Kelurahan ' . $data->detail_kelurahan->kelurahan . ' Provinsi ' . $data->detail_provinsi->provinsi));
-                    return ucwords($loc);
-                })
+                // ->editColumn('alamat', function ($data) {
+                //     $loc = $data->alamat . ' ' . (strtolower($data->detail_kotakab->kota . ', Kecamatan ' . $data->detail_kecamatan->kecamatan . ', Kelurahan ' . $data->detail_kelurahan->kelurahan . ' Provinsi ' . $data->detail_provinsi->provinsi));
+                //     return ucwords($loc);
+                // })
                 ->rawColumns(['action', 'usia'])
                 ->make(true);
         }

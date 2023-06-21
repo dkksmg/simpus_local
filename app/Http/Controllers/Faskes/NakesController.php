@@ -234,4 +234,25 @@ class NakesController extends Controller
             return redirect()->back()->with(['error' => 'Nakes gagal dihapus!']);
         }
     }
+    public function ambilNakes()
+    {
+        try {
+
+            $klinik = Helpers::DataNakes();
+            foreach ($klinik['data']['nakes'] as $kl) {
+                $obat = [
+                    'kode_faskes' => $kl['klinik'],
+                    'kode_nakes' => Helpers::IdNakesInsert($kl['klinik']),
+                    'kode_nakes_lama' => $kl['kdDokter'],
+                    'nama_nakes' => $kl['nmDokter'],
+                    'jabatan_nakes' => 1,
+                    'status' => 'active',
+                ];
+                Nakes::create($obat);
+            }
+            echo 'berhasil tersimpan';
+        } catch (\Throwable $th) {
+            echo $th->getMessage();
+        }
+    }
 }

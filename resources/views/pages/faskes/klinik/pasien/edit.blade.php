@@ -6,7 +6,7 @@
 @section('content')
     <div class="body flex-grow-1 px-3">
         <div class="container-lg">
-            <div class="fs-2 fw-semibold">Pendaftaran Pasien Baru</div>
+            <div class="fs-2 fw-semibold">Ubah Data Pasien {{ $pasien->nama_pasien }}</div>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-4">
                     <li class="breadcrumb-item">
@@ -38,7 +38,7 @@
                                                             </label>
                                                             <input class="form-control @error('no_cm') is-invalid @enderror"
                                                                 id="no_cm" type="text" name="no_cm"
-                                                                value="{{ old('no_cm') }}">
+                                                                value="{{ isset($pasien->no_cm) ? $pasien->no_cm : old('no_cm') }}">
                                                             @error('no_cm')
                                                                 <div class="alert alert-danger">{{ $message }}</div>
                                                             @enderror
@@ -50,7 +50,8 @@
                                                             </label>
                                                             <input class="form-control @error('nik') is-invalid @enderror"
                                                                 id="nik" type="text" name="nik"
-                                                                value="{{ old('nik') }}" placeholder="NIK">
+                                                                value="{{ isset($pasien->nik) ? $pasien->nik : old('nik') }}"
+                                                                placeholder="NIK">
                                                             @error('nik')
                                                                 <div class="alert alert-danger">{{ $message }}</div>
                                                             @enderror
@@ -83,7 +84,7 @@
                                                             <input
                                                                 class="form-control @error('no_asuransi') is-invalid @enderror"
                                                                 id="no_asuransi" type="text" name="no_asuransi"
-                                                                value="{{ old('no_asuransi') }}"
+                                                                value="{{ isset($pasien->nomor_asuransi) ? $pasien->nomor_asuransi : old('no_asuransi') }}"
                                                                 placeholder="beri tanda strip (-) jika tidak memiliki">
                                                             @error('no_asuransi')
                                                                 <div class="alert alert-danger">{{ $message }}</div>
@@ -99,7 +100,8 @@
                                                             <input
                                                                 class="form-control @error('nama_pasien') is-invalid @enderror"
                                                                 id="nama_pasien" type="text" name="nama_pasien"
-                                                                placeholder="Nama Pasien" value="{{ old('nama_pasien') }}">
+                                                                placeholder="Nama Pasien"
+                                                                value="{{ isset($pasien->nama_pasien) ? $pasien->nama_pasien : old('nama_pasien') }}">
                                                             @error('nama_pasien')
                                                                 <div class="alert alert-danger">{{ $message }}</div>
                                                             @enderror
@@ -112,7 +114,7 @@
                                                             <input
                                                                 class="form-control @error('nama_kk') is-invalid @enderror"
                                                                 id="nama_kk" type="text" name="nama_kk"
-                                                                value="{{ old('nama_kk') }}"
+                                                                value="{{ isset($pasien->nama_kk) ? $pasien->nama_kk : old('nama_kk') }}"
                                                                 placeholder="Nama Kepala Keluarga (KK)">
                                                             @error('nama_kk')
                                                                 <div class="alert alert-danger">{{ $message }}</div>
@@ -126,7 +128,8 @@
                                                             <input
                                                                 class="form-control @error('no_kontak') is-invalid @enderror"
                                                                 id="no_kontak" type="text" name="no_kontak"
-                                                                value="{{ old('no_kontak') }}" placeholder="No HP/Telp">
+                                                                value="{{ isset($pasien->hp) ? $pasien->hp : old('no_kontak') }}"
+                                                                placeholder="No HP/Telp">
                                                             @error('no_kontak')
                                                                 <div class="alert alert-danger">{{ $message }}</div>
                                                             @enderror
@@ -144,11 +147,17 @@
                                                                 name="jenis_kelamin">
                                                                 <option value=""></option>
                                                                 <option value="L"
-                                                                    {{ old('jenis_kelamin') == 'L' ? 'selected' : '' }}>
-                                                                    Laki - Laki</option>
+                                                                    @if (isset($pasien->jenis_kelamin)) {{ $pasien->jenis_kelamin == 'L' ? 'selected' : '' }}
+                                                                @else
+                                                                {{ old('jenis_kelamin') == 'L' ? 'selected' : '' }} @endif>
+                                                                    Laki - Laki
+                                                                </option>
                                                                 <option value="P"
-                                                                    {{ old('jenis_kelamin') == 'P' ? 'selected' : '' }}>
-                                                                    Perempuan</option>
+                                                                    @if (isset($pasien->jenis_kelamin)) {{ $pasien->jenis_kelamin == 'P' ? 'selected' : '' }}
+                                                                @else
+                                                                {{ old('jenis_kelamin') == 'P' ? 'selected' : '' }} @endif>
+                                                                    Perempuan
+                                                                </option>
                                                             </select>
                                                             @error('jenis_kelamin')
                                                                 <div class="alert alert-danger">{{ $message }}</div>
@@ -162,7 +171,7 @@
                                                             <input
                                                                 class="form-control @error('tmp_lahir') is-invalid @enderror"
                                                                 id="tmp_lahir" type="text" name="tmp_lahir"
-                                                                value="{{ old('tmp_lahir') }}"
+                                                                value="{{ isset($pasien->tmp_lahir) ? $pasien->tmp_lahir : old('tmp_lahir') }}"
                                                                 placeholder="Tempat Lahir">
                                                             @error('tmp_lahir')
                                                                 <div class="alert alert-danger">{{ $message }}</div>
@@ -176,7 +185,7 @@
                                                             <input
                                                                 class="form-control @error('tgl_lahir') is-invalid @enderror"
                                                                 id="tgl_lahir" type="text" name="tgl_lahir"
-                                                                value="{{ old('tgl_lahir') }}"
+                                                                value="{{ isset($pasien->tgl_lahir) ? \Carbon\Carbon::parse($pasien->tgl_lahir)->format('d-m-Y') : old('tgl_lahir') }}"
                                                                 placeholder="Tanggal Lahir">
                                                             @error('tgl_lahir')
                                                                 <div class="alert alert-danger">{{ $message }}</div>
@@ -192,10 +201,13 @@
                                                             <select
                                                                 class="form-select @error('provinsi_ktp') is-invalid @enderror select"
                                                                 name="provinsi_ktp">
-                                                                <option value=""></option>
+                                                                <option value="">Pilih Provinsi</option>
                                                                 @foreach ($provinsi as $prov)
                                                                     <option value="{{ $prov->kode_provinsi }}"
-                                                                        {{ $prov->kode_provinsi == old('provinsi_ktp') ? 'selected' : '' }}>
+                                                                        {{-- @if (isset($pasien->provinsi)) {{ $prov->kode_provinsi == $pasien->provinsi ? 'selected' : '' }}
+                                                                        @else --}}
+                                                                        {{ $prov->kode_provinsi == old('provinsi_ktp') ? 'selected' : '' }}
+                                                                        {{-- @endif --}}>
                                                                         {{ $prov->nama }}</option>
                                                                 @endforeach
                                                             </select>
@@ -245,9 +257,9 @@
                                                     </div>
                                                     <div class="col-md-12">
                                                         <div class="mb-3">
-                                                            <label class="form-label" for="tgl_lahir">Alamat
+                                                            <label class="form-label" for="alamat_ktp">Alamat
                                                             </label>
-                                                            <textarea class="form-control @error('alamat_ktp') is-invalid @enderror" name="alamat_ktp">{{ old('alamat_ktp') }}</textarea>
+                                                            <textarea class="form-control @error('alamat_ktp') is-invalid @enderror ckeditor" name="alamat_ktp">{{ old('alamat_ktp') }}</textarea>
                                                             @error('tgl_lahir')
                                                                 <div class="alert alert-danger">{{ $message }}</div>
                                                             @enderror
@@ -280,6 +292,8 @@
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
+    <script src="https://cdn.ckeditor.com/4.14.1/standard-all/ckeditor.js"></script>
+
     <script>
         $('#tgl_lahir').datepicker({
             uiLibrary: 'bootstrap4',
@@ -291,12 +305,17 @@
     </script>
     <script>
         $(document).ready(function() {
+            $('.ckeditor').ckeditor();
+        });
+        $(document).ready(function() {
             $('.select').select2();
+
         });
         $(document).ready(function() {
             $("[name=provinsi_ktp]")
                 .on('change', function() {
                     var prov_id = $(this).find(":selected").val();
+                    var kota = '{{ $pasien->kota_kab }}';
                     $("[name=kotakab_ktp]").html('');
                     $.ajax({
                         url: "{{ route('data.kota') }}",
@@ -307,12 +326,20 @@
                         },
                         dataType: 'json',
                         success: function(result) {
-                            console.log(result);
+                            // console.log(result);
                             $('[name=kotakab_ktp]').html(
                                 '<option value="">Pilih Kota/Kab</option>');
+
                             $.each(result.data, function(key, value) {
-                                $("[name=kotakab_ktp]").append('<option value="' + value
-                                    .kode_kab + '">' + value.nama + '</option>');
+                                if (kota == value.kode_kab) {
+                                    $("[name=kotakab_ktp]").append('<option value="' + value
+                                            .kode_kab + '" selected>' + value.nama +
+                                            '</option>')
+                                        .trigger('change');
+                                } else {
+                                    $("[name=kotakab_ktp]").append('<option value="' + value
+                                        .kode_kab + '">' + value.nama + '</option>');
+                                }
                             });
                             $('[name=kec_ktp]').html('<option value=""></option>');
                             $('[name=kel_ktp]').html('<option value=""></option>');
@@ -321,6 +348,8 @@
                 });
             $('[name=kotakab_ktp]').on('change', function() {
                 var kota_id = this.value;
+                var kec = '{{ $pasien->kecamatan }}';
+
                 $("[name=kec_ktp]").html('');
                 $.ajax({
                     url: "{{ route('data.kecamatan') }}",
@@ -331,11 +360,20 @@
                     },
                     dataType: 'json',
                     success: function(res) {
-                        console.log(res);
                         $('[name=kec_ktp]').html('<option value="">Pilih Kecamatan</option>');
                         $.each(res.data, function(key, value) {
-                            $("[name=kec_ktp]").append('<option value="' + value
-                                .kode_kec + '">' + value.nama + '</option>');
+
+                            // $("[name=kec_ktp]").append('<option value="' + value
+                            //     .kode_kec + '">' + value.nama + '</option>');
+                            if (kec == value.kode_kec) {
+                                $("[name=kec_ktp]").append('<option value="' + value
+                                        .kode_kec + '" selected>' + value.nama +
+                                        '</option>')
+                                    .trigger('change');
+                            } else {
+                                $("[name=kec_ktp]").append('<option value="' + value
+                                    .kode_kec + '">' + value.nama + '</option>');
+                            }
                         });
                         $('[name=kel_ktp]').html('<option value=""></option>');
                     }
@@ -343,7 +381,9 @@
             });
             $('[name=kec_ktp]').on('change', function() {
                 var kec_id = this.value;
-                $("[name=kel_ktp]").html('');
+                // $("[name=kel_ktp]").html('');
+                var kel = '{{ $pasien->kelurahan }}';
+
                 $.ajax({
                     url: "{{ route('data.kelurahan') }}",
                     type: "POST",
@@ -355,8 +395,17 @@
                     success: function(res) {
                         $('[name=kel_ktp]').html('<option value="">Pilih Kelurahan</option>');
                         $.each(res.data, function(key, value) {
-                            $("[name=kel_ktp]").append('<option value="' + value
-                                .kode_kel + '">' + value.nama + '</option>');
+                            // $("[name=kel_ktp]").append('<option value="' + value
+                            //     .kode_kel + '">' + value.nama + '</option>');
+                            if (kel == value.kode_kel) {
+                                $("[name=kel_ktp]").append('<option value="' + value
+                                        .kode_kel + '" selected>' + value.nama +
+                                        '</option>')
+                                    .trigger('change');
+                            } else {
+                                $("[name=kel_ktp]").append('<option value="' + value
+                                    .kode_kel + '">' + value.nama + '</option>');
+                            }
                         });
                     }
                 });
@@ -371,6 +420,10 @@
         $('#store').click(function(e) {
             e.preventDefault();
             var formData = $('#form').serializeArray()
+            formData.push({
+                name: 'alamat_ktp',
+                value: CKEDITOR.instances['alamat_ktp'].getData()
+            })
             var redirect = '{{ route('faskes.kunjungan') }}'
             var json = {};
             $.each(formData, function(i, field) {
@@ -416,6 +469,40 @@
                 }
             })
         })
+        getTinggal()
+
+        function getTinggal() {
+            var kode = '{{ Auth::user()->kode_faskes }}';
+            var pasien = '{{ $pasien->kode_pasien }}';
+            $.ajax({
+                url: "{{ route('faskes.pasien.tinggal') }}",
+                method: "POST",
+                data: {
+                    kode: kode,
+                    pasien: pasien,
+                },
+                async: true,
+                dataType: "json",
+                success: function(resp) {
+                    console.log(resp.data);
+                    $('[name="provinsi_ktp"]')
+                        .val(resp.data.prov)
+                        .trigger("change");
+                    CKEDITOR.instances['alamat_ktp'].setData(resp.data.alamat)
+
+                    // $('[name="kotakab_ktp"]')
+                    //     .val(resp.data.kota)
+                    //     .trigger("change");
+                    // $('[name="kec_ktp"]')
+                    //     .val(resp.data.kec)
+                    //     .trigger("change");
+                    // $('[name="kel_ktp"]')
+                    //     .val(resp.data.kel)
+                    //     .trigger("change");
+
+                },
+            });
+        }
     </script>
     <script type="text/javascript">
         document.getElementById("back").onclick = function() {

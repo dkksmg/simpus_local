@@ -46,16 +46,28 @@
                         <div class="card col-md-7 p-4 mb-0" style="display:none" id="step2">
                             <div class="card-body">
                                 <h1 id="nama_klinik"></h1>
-                                <p class="text-medium-emphasis">Masukkan alamat email dan password</p>
+                                <p class="text-medium-emphasis">Masukkan username dan password</p>
                                 <form action="{{ route('login') }}" method="post">
                                     @csrf
-                                    <div class="input-group mb-3"><span class="input-group-text">
+                                    {{-- <div class="input-group mb-3"><span class="input-group-text">
                                             <i class="fa-light fa-user"></i>
                                         </span>
                                         <input class="form-control @error('email') is-invalid @enderror" name="email"
                                             value="{{ old('email') }}" required autocomplete="email" autofocus
                                             placeholder="Alamat Email">
                                         @error('email')
+                                            <div class="alert alert-danger rounded mt-2" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </div>
+                                        @enderror
+                                    </div> --}}
+                                    <div class="input-group mb-3"><span class="input-group-text">
+                                            <i class="fa-light fa-user"></i>
+                                        </span>
+                                        <input class="form-control @error('username') is-invalid @enderror" name="username"
+                                            value="{{ old('username') }}" required autocomplete="username" autofocus
+                                            placeholder="Username">
+                                        @error('username')
                                             <div class="alert alert-danger rounded mt-2" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </div>

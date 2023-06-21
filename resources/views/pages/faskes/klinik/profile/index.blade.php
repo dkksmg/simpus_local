@@ -56,6 +56,34 @@
 
                                     </div>
                                     <div class="row gx-3 mb-3">
+                                        <div class="col-md-6">
+                                            <label class="small mb-1" for="inputFirstName">Jenis</label>
+                                            <input
+                                                class="form-control-plaintext @error('nama_lengkap') is-invalid @enderror"
+                                                id="inputFirstName" type="text"
+                                                value="{{ isset($faskes->detail_faskes->detail_jenis) ? $faskes->detail_faskes->detail_jenis->nama_jenis : '-' }}"
+                                                name="jenis" readonly />
+                                            @error('nama_lengkap')
+                                                <div class="invalid-feedback" role="alert">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+
+                                    </div>
+                                    <div class="row gx-3 mb-3">
+                                        <div class="col-md-6">
+                                            <label class="small mb-1" for="inputFirstName">Layanan</label>
+                                            <input
+                                                class="form-control-plaintext @error('nama_lengkap') is-invalid @enderror"
+                                                id="inputFirstName" type="text"
+                                                value="{{ isset($faskes->detail_faskes->detail_layanan) ? $faskes->detail_faskes->detail_layanan->nama_pelayanan : '-' }}"
+                                                name="nama_lengkap" readonly />
+                                            @error('nama_lengkap')
+                                                <div class="invalid-feedback" role="alert">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+
+                                    </div>
+                                    <div class="row gx-3 mb-3">
                                         <div class="col-md-12">
                                             <label class="small mb-1" for="inputFirstName">PJ Faskes</label>
                                             <input
@@ -162,10 +190,19 @@
                                     </div>
                                     <!-- Form Group (email address)-->
                                     <div class="mb-3">
+                                        <label class="small mb-1" for="username">Username</label>
+                                        <input class="form-control @error('username') is-invalid @enderror"
+                                            id="username" type="username" value="{{ $faskes->username }}"
+                                            name="username" />
+                                        @error('username')
+                                            <div class="invalid-feedback" role="alert">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="mb-3">
                                         <label class="small mb-1" for="inputEmailAddress">Email address</label>
                                         <input class="form-control @error('email') is-invalid @enderror"
                                             id="inputEmailAddress" type="email" placeholder="Enter your email address"
-                                            value="{{ $faskes->email }}" name="email" />
+                                            value="{{ $faskes->email }}" name="email" readonly disabled />
                                         @error('email')
                                             <div class="invalid-feedback" role="alert">{{ $message }}</div>
                                         @enderror
@@ -189,7 +226,7 @@
                                 <div class="card-body text-center">
                                     <!-- Profile picture image-->
                                     <img class="img-account-profile rounded-circle mb-2"
-                                        src="{{ Storage::url($faskes->foto_profil) }}"
+                                        src="{{ url('/storage/' . $faskes->foto_profil) }}"
                                         onerror="this.onerror=null; this.src='{{ url('assets/img/user.png') }}'"
                                         alt="Profil Image" width="150px" height="150px" />
                                     <!-- Profile picture help block-->
@@ -237,6 +274,7 @@
             const map = new google.maps.Map(document.getElementById("map"), {
                 zoom: 18,
                 center: center,
+                draggable: false,
             });
             var infowindow = new google.maps.InfoWindow();
             var bounds = new google.maps.LatLngBounds();
@@ -248,7 +286,10 @@
                 bounds.extend(marker.position);
                 google.maps.event.addListener(marker, 'click', (function(marker, location) {
                     return function() {
-                        infowindow.setContent(location.nama + "<br><br>" + location.lat + " & " + location
+                        infowindow.setContent("<b>" + location.nama + "</b><br>" + location.alamat +
+                            "<br><br>" +
+                            location.lat +
+                            " & " + location
                             .lng);
                         infowindow.open(map, marker);
                     }
@@ -258,5 +299,5 @@
         }
     </script>
     <script type="text/javascript"
-        src="https://maps.google.com/maps/api/js?key={{ env('GOOGLE_MAPS_API_KEY') }}&callback=initializeMap"></script>
+        src="https://maps.google.com/maps/api/js?key={{ config('app.key_gmaps') }}&callback=initializeMap"></script>
 @endpush

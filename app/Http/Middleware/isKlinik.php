@@ -19,6 +19,8 @@ class isKlinik
     {
         if (auth::check() && Auth::user()->role == "KLINIK") {
             return $next($request);
+        } else if (auth::check() && Auth::user()->role == 'ADMIN') {
+            return $next($request);
         } else {
             return redirect()->route('login');
         }

@@ -213,6 +213,19 @@
                                                 </div>
                                                 <div class="col-md-4">
                                                     <div class="mb-3">
+                                                        <label class="form-label" for="tgl_terbit">Tanggal Terbit Ijin
+                                                        </label>
+                                                        <input
+                                                            class="form-control-plaintext @error('tgl_terbit') is-invalid @enderror"
+                                                            id="tgl_terbit" name="tgl_terbit" readonly
+                                                            value="{{ old('tgl_terbit') }}" />
+                                                        @error('tgl_terbit')
+                                                            <div class="alert alert-danger">{{ $message }}</div>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="mb-3">
                                                         <label class="form-label" for="tgl_berakhir">Tanggal Berakhir Ijin
                                                         </label>
                                                         <input
@@ -272,6 +285,32 @@
                                                             id="koordinat_lokasi" name="koordinat_lokasi" readonly
                                                             value="{{ old('koordinat_lokasi') }}"></inp>
                                                         @error('koordinat_lokasi')
+                                                            <div class="alert alert-danger">{{ $message }}</div>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="mb-3">
+                                                        <label class="form-label" for="jenis">Jenis Klinik
+                                                        </label>
+                                                        <input
+                                                            class="form-control-plaintext @error('jenis') is-invalid @enderror"
+                                                            id="jenis" name="jenis" readonly
+                                                            value="{{ old('jenis') }}"></inp>
+                                                        @error('jenis')
+                                                            <div class="alert alert-danger">{{ $message }}</div>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="mb-3">
+                                                        <label class="form-label" for="pelayanan">Pelayanan Klinik
+                                                        </label>
+                                                        <input
+                                                            class="form-control-plaintext @error('pelayanan') is-invalid @enderror"
+                                                            id="pelayanan" name="pelayanan" readonly
+                                                            value="{{ old('pelayanan') }}"></inp>
+                                                        @error('pelayanan')
                                                             <div class="alert alert-danger">{{ $message }}</div>
                                                         @enderror
                                                     </div>
@@ -343,7 +382,10 @@
                         $('[name=kelurahan_faskes]').val(data.data.nama_kelurahan);
                         $('[name=kode_faskes]').val(data.data.kode_faskes);
                         $('[name=tgl_berakhir]').val(data.data.tgl_berakhir_ijin);
+                        $('[name=tgl_terbit]').val(data.data.tgl_terbit_ijin);
                         $('[name=koordinat_lokasi]').val(data.data.koordinat);
+                        $('[name=jenis]').val(data.data.jenis);
+                        $('[name=pelayanan]').val(data.data.layanan);
                     },
                     error: function() {
                         alert('Data Tidak Ditemukan');

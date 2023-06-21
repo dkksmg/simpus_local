@@ -192,4 +192,24 @@ class TindakanController extends Controller
             return redirect()->back()->with(['error' => 'Data Tindakan gagal dihapus!']);
         }
     }
+    public function ambilTindakan()
+    {
+        try {
+
+            $klinik = Helpers::DataTindakan();
+            foreach ($klinik['data']['tindakan'] as $kl) {
+                $obat = [
+                    'kode_faskes' => $kl['klinik'],
+                    'kode_tindakan' => Helpers::IdTindakanInsert($kl['klinik']),
+                    'kode_tindakan_lama' => $kl['kdTindakan'],
+                    'detail_tindakan' => $kl['nmTindakan'],
+                    'tarif_tindakan' => $kl['tarif'],
+                ];
+                Tindakan::create($obat);
+            }
+            echo 'berhasil tersimpan';
+        } catch (\Throwable $th) {
+            echo $th->getMessage();
+        }
+    }
 }

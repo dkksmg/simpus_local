@@ -11,7 +11,7 @@ class Pasien extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'kode_faskes', 'no_cm', 'kode_ihs_pasien', 'nik', 'asuransi', 'nomor_asuransi', 'nama_pasien', 'nama_kk', 'no_hp_telp', 'jenis_kelamin', 'tmp_lahir', 'tgl_lahir', 'provinsi', 'kota_kab', 'kecamatan', 'kelurahan', 'alamat'
+        'kode_faskes', 'kode_pasien', 'no_cm', 'kode_ihs_pasien', 'nik', 'asuransi', 'nomor_asuransi', 'nama_pasien', 'nama_kk', 'hp', 'jenis_kelamin', 'tmp_lahir', 'tgl_lahir', 'provinsi', 'kota_kab', 'kecamatan', 'kelurahan', 'alamat', 'status_pernikahan'
     ];
 
     public function detail_faskes()

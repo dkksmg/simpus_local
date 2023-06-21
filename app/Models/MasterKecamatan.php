@@ -10,7 +10,7 @@ class MasterKecamatan extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['kota_id', 'kecamatan'];
+    protected $fillable = ['kode_provinsi', 'kode_kotakab', 'kode_kecamatan', 'nama'];
 
     public function nama_kelurahan()
     {

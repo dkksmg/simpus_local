@@ -193,7 +193,7 @@
                                                         <input
                                                             class="form-control-plaintext @error('no_ijin') is-invalid @enderror"
                                                             id="no_ijin" name="no_ijin" readonly
-                                                            value="{{ $faskes->no_ijin }}"></inp>
+                                                            value="{{ $faskes->no_ijin }}"></input>
                                                         @error('no_ijin')
                                                             <div class="alert alert-danger">{{ $message }}</div>
                                                         @enderror
@@ -207,8 +207,21 @@
                                                         <input
                                                             class="form-control-plaintext @error('kontak_pj') is-invalid @enderror"
                                                             id="kontak_pj" name="kontak_pj" readonly
-                                                            value="{{ $faskes->phone_pj }}"></inp>
+                                                            value="{{ $faskes->phone_pj }}"></input>
                                                         @error('kontak_pj')
+                                                            <div class="alert alert-danger">{{ $message }}</div>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="mb-3">
+                                                        <label class="form-label" for="tgl_terbit">Tanggal Terbit Ijin
+                                                        </label>
+                                                        <input
+                                                            class="form-control-plaintext @error('tgl_terbit') is-invalid @enderror"
+                                                            id="tgl_terbit" name="tgl_terbit" readonly
+                                                            value="{{ \Carbon\Carbon::parse($faskes->ijin_terbit)->format('d-m-Y') }}" />
+                                                        @error('tgl_terbit')
                                                             <div class="alert alert-danger">{{ $message }}</div>
                                                         @enderror
                                                     </div>
@@ -233,7 +246,7 @@
                                                         <input
                                                             class="form-control-plaintext @error('kecamatan_faskes') is-invalid @enderror"
                                                             id="kecamatan_faskes" name="kecamatan_faskes" readonly
-                                                            value="{{ $faskes->kecamatan }}"></inp>
+                                                            value="{{ $faskes->kecamatan }}"></input>
                                                         @error('kecamatan_faskes')
                                                             <div class="alert alert-danger">{{ $message }}</div>
                                                         @enderror
@@ -246,7 +259,7 @@
                                                         <input
                                                             class="form-control-plaintext @error('kelurahan_faskes') is-invalid @enderror"
                                                             id="kelurahan_faskes" name="kelurahan_faskes" readonly
-                                                            value="{{ $faskes->kelurahan }}"></inp>
+                                                            value="{{ $faskes->kelurahan }}"></input>
                                                         @error('kelurahan_faskes')
                                                             <div class="alert alert-danger">{{ $message }}</div>
                                                         @enderror
@@ -259,7 +272,7 @@
                                                         <input
                                                             class="form-control-plaintext @error('kode_faskes') is-invalid @enderror"
                                                             id="kode_faskes" name="kode_faskes" readonly
-                                                            value="{{ $faskes->kode_faskes }}"></inp>
+                                                            value="{{ $faskes->kode_faskes }}"></input>
                                                         @error('kode_faskes')
                                                             <div class="alert alert-danger">{{ $message }}</div>
                                                         @enderror
@@ -272,8 +285,34 @@
                                                         <input
                                                             class="form-control-plaintext @error('koordinat_lokasi') is-invalid @enderror"
                                                             id="koordinat_lokasi" name="koordinat_lokasi" readonly
-                                                            value="{{ $faskes->koordinat }}"></inp>
+                                                            value="{{ $faskes->koordinat }}"></input>
                                                         @error('koordinat_lokasi')
+                                                            <div class="alert alert-danger">{{ $message }}</div>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="mb-3">
+                                                        <label class="form-label" for="jenis">Jenis Klinik
+                                                        </label>
+                                                        <input
+                                                            class="form-control-plaintext @error('jenis') is-invalid @enderror"
+                                                            id="jenis" name="jenis" readonly
+                                                            value="{{ old('jenis') }}">
+                                                        @error('jenis')
+                                                            <div class="alert alert-danger">{{ $message }}</div>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="mb-3">
+                                                        <label class="form-label" for="pelayanan">Pelayanan Klinik
+                                                        </label>
+                                                        <input
+                                                            class="form-control-plaintext @error('pelayanan') is-invalid @enderror"
+                                                            id="pelayanan" name="pelayanan" readonly
+                                                            value="{{ old('pelayanan') }}"></input>
+                                                        @error('pelayanan')
                                                             <div class="alert alert-danger">{{ $message }}</div>
                                                         @enderror
                                                     </div>
@@ -347,6 +386,8 @@
                         $('[name=kode_faskes]').val(data.data.kode_faskes);
                         $('[name=tgl_berakhir]').val(data.data.tgl_berakhir_ijin);
                         $('[name=koordinat_lokasi]').val(data.data.koordinat);
+                        $('[name=jenis]').val(data.data.jenis);
+                        $('[name=pelayanan]').val(data.data.layanan);
                     },
                     error: function() {
                         alert('Data Tidak Ditemukan');

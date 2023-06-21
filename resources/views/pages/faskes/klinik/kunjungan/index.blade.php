@@ -87,7 +87,7 @@
                                         <thead>
                                             <tr>
                                                 {{-- <th>ID IHS Pasien</th> --}}
-                                                <th>NO CM</th>
+                                                <th>No CM</th>
                                                 <th>NIK</th>
                                                 <th>Nama Pasien</th>
                                                 <th>Usia</th>
@@ -138,8 +138,18 @@
                     nik: nik,
                 },
                 dataType: 'json',
+                beforeSend: function() {
+                    Swal.fire({
+                        title: 'Mencari Data',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        didOpen: () => {
+                            Swal.showLoading()
+                        }
+                    })
+                },
                 success: function(data) {
-                    console.log(data);
+                    Swal.close()
                     if (data.recordsFiltered != 0) {
                         if ($.fn.dataTable.isDataTable('#pasien')) {
                             $('#pasien').dataTable().fnDestroy();
@@ -180,7 +190,13 @@
 
                 },
                 error: function() {
-                    alert('Data Tidak Ditemukan');
+                    Swal.fire({
+                        icon: 'error',
+                        title: "Oops!",
+                        text: 'Something went wrong',
+                        timer: 6000,
+                        showConfirmButton: true,
+                    })
                 }
             });
         })

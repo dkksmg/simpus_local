@@ -205,4 +205,25 @@ class ObatController extends Controller
             return redirect()->back()->with(['error' => 'Data Obat gagal dihapus!']);
         }
     }
+
+    public function ambilObat()
+    {
+        try {
+
+            $klinik = Helpers::DataObat();
+            foreach ($klinik['data']['obat'] as $kl) {
+                $obat = [
+                    'kode_faskes' => $kl['klinik'],
+                    'kode_obat' => Helpers::IdObatInsert($kl['klinik']),
+                    'kode_obat_lama' => $kl['kdObat'],
+                    'nama_obat' => $kl['nmObat'],
+                    'tarif_obat' => $kl['tarif'],
+                ];
+                Obat::create($obat);
+            }
+            echo 'berhasil tersimpan';
+        } catch (\Throwable $th) {
+            echo $th->getMessage();
+        }
+    }
 }

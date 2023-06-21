@@ -11,7 +11,7 @@ class Obat extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'kode_faskes', 'kode_obat', 'nama_obat', 'jenis_obat', 'pabrik_obat', 'dosis_obat', 'tarif_obat'
+        'kode_faskes', 'kode_obat', 'kode_obat_lama', 'nama_obat', 'jenis_obat', 'pabrik_obat', 'dosis_obat', 'tarif_obat'
     ];
 
     public function detail_faskes()

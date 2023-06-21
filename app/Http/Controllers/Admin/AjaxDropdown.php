@@ -35,26 +35,89 @@ class AjaxDropdown extends Controller
     {
         if ($request->ajax()) {
 
-            $data = MasterKotaKab::where("provinsi_id", $request->prov_id)->orderBy('kota', 'DESC')->get(["id", "provinsi_id", "kota"]);
+            try {
+                $data = MasterKotaKab::where("kode_provinsi", $request->prov)->orderBy('nama', 'ASC')->get();
 
-            return response()->json($data);
+                foreach ($data as $kota) {
+                    $dataKota[] = array(
+                        'kode_prov' => $kota->kode_provinsi,
+                        'kode_kab' => $kota->kode_kotakab,
+                        'nama' => $kota->nama,
+                    );
+                }
+                return response()->json(array(
+                    'status' => true,
+                    'message' => 'Berhasil mendapatkan data',
+                    'data' => $dataKota,
+                    'statusCode' => 200
+                ), 200);
+            } catch (\Throwable $th) {
+                return response()->json(array(
+                    'status' => false,
+                    'message' => $th->getMessage(),
+                    'data' => null,
+                    'statusCode' => $th->getCode()
+                ), $th->getCode());
+            }
         }
     }
     public function fetchKecamatan(Request $request)
     {
         if ($request->ajax()) {
+            try {
+                $data = MasterKecamatan::where("kode_kotakab", $request->kota)->orderBy('nama', 'ASC')->get();
 
-            $data = MasterKecamatan::where("kota_id", $request->kota_id)->orderBy('kecamatan', 'ASC')->get(["id", "kota_id", "kecamatan"]);
-            return response()->json($data);
+                foreach ($data as $kecamatan) {
+                    $dataKecamatan[] = array(
+                        'kode_prov' => $kecamatan->kode_provinsi,
+                        'kode_kab' => $kecamatan->kode_kotakab,
+                        'kode_kec' => $kecamatan->kode_kecamatan,
+                        'nama' => ucwords($kecamatan->nama),
+                    );
+                }
+                return response()->json(array(
+                    'status' => true,
+                    'message' => 'Berhasil mendapatkan data',
+                    'data' => $dataKecamatan,
+                    'statusCode' => 200
+                ), 200);
+            } catch (\Throwable $th) {
+                return response()->json(array(
+                    'status' => false,
+                    'message' => $th->getMessage(),
+                    'data' => null,
+                    'statusCode' => $th->getCode()
+                ), $th->getCode());
+            }
         }
     }
     public function fetchKelurahan(Request $request)
     {
-        if ($request->ajax()) {
+        try {
+            $data = MasterKelurahan::where("kode_kecamatan", $request->kec)->orderBy('nama', 'ASC')->get();
 
-            $data = MasterKelurahan::where("kecamatan_id", $request->kec_id)->orderBy('kelurahan', 'ASC')->get(["id", "kecamatan_id", "kelurahan"]);
-
-            return response()->json($data);
+            foreach ($data as $kelurahan) {
+                $dataKelurahan[] = array(
+                    'kode_prov' => $kelurahan->kode_provinsi,
+                    'kode_kab' => $kelurahan->kode_kotakab,
+                    'kode_kec' => $kelurahan->kode_kecamatan,
+                    'kode_kel' => $kelurahan->kode_kelurahan,
+                    'nama' => ucwords($kelurahan->nama),
+                );
+            }
+            return response()->json(array(
+                'status' => true,
+                'message' => 'Berhasil mendapatkan data',
+                'data' => $dataKelurahan,
+                'statusCode' => 200
+            ), 200);
+        } catch (\Throwable $th) {
+            return response()->json(array(
+                'status' => false,
+                'message' => $th->getMessage(),
+                'data' => null,
+                'statusCode' => $th->getCode()
+            ), $th->getCode());
         }
     }
 }

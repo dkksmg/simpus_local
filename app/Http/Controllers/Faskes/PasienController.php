@@ -23,22 +23,20 @@ class PasienController extends Controller
      */
     public function index(Request $request)
     {
+
         if ($request->ajax()) {
-            $data = Pasien::where('kode_faskes', '=', Auth::user()->kode_faskes,)
-                ->with(['detail_faskes', 'detail_provinsi', 'detail_kotakab', 'detail_kecamatan', 'detail_kelurahan'])->whereHas('detail_faskes', function ($query) {
-                    $query->where('faskes.status', '=', 'active');
-                    $query->orWhere('faskes.status', '=', 'inactive');
-                })->get();
+            $data = Pasien::where('kode_faskes', '=', Auth::user()->kode_faskes)
+                ->get();
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
                     $btn = '<table><tbody><tr class="text-center">';
                     $btn = $btn . '<td class="text-center">
-                    <button class="btn btn-warning btn-sm me-2" title="Edit Data ' . $row->name . '" onclick="window.location.href=\'' . route('faskes.nakes.edit', Crypt::encrypt($row->kode_nakes)) . '\'" ><i class="fa-solid fa-pencil"></i></button>
+                    <button class="btn btn-warning btn-sm me-2" title="Edit Data ' . $row->nama_pasien . '" onclick="window.location.href=\'' . route('faskes.pasien.edit', ($row->kode_pasien)) . '\'" ><i class="fa-solid fa-pencil"></i></button>
 
                     </td>';
                     $btn = $btn . '<td class="text-center">
-                    <form action="' . route('faskes.nakes.destroy', Crypt::encrypt($row->kode_nakes)) . '" method="post" class="d-inline" title="Hapus Data Nakes '  . $row->name . '">
+                    <form action="' . route('faskes.pasien.destroy', ($row->kode_pasien)) . '" method="post" class="d-inline" title="Hapus Data '  . $row->nama_pasien . '">
                     ' . method_field('DELETE') . '
                     ' . csrf_field() . '
                     <button class="btn btn-danger btn-sm me-2"><i class="fa-solid fa-trash"></i>
@@ -52,15 +50,15 @@ class PasienController extends Controller
                     $usia = Helpers::getAge($row->tgl_lahir);
                     return $usia;
                 })
-                ->rawColumns(['action', 'usia'])
                 ->editColumn('tgl_lahir', function ($data) {
                     $formatedDate = $data->tmp_lahir . ', ' . Carbon::parse($data->tgl_lahir)->translatedformat('d F Y');
                     return $formatedDate;
                 })
-                ->editColumn('alamat', function ($data) {
-                    $loc = $data->alamat . ' ' . ucwords(strtolower($data->detail_kotakab->kota . ', Kecamatan ' . $data->detail_kecamatan->kecamatan . ', Kelurahan ' . $data->detail_kelurahan->kelurahan . ' Provinsi ' . $data->detail_provinsi->provinsi));
-                    return $loc;
-                })
+                // ->editColumn('alamat', function ($data) {
+                //     $loc = $data->alamat . ' ' . ucwords(strtolower($data->detail_kotakab->kota . ', Kecamatan ' . $data->detail_kecamatan->kecamatan . ', Kelurahan ' . $data->detail_kelurahan->kelurahan . ' Provinsi ' . $data->detail_provinsi->provinsi));
+                //     return $loc;
+                // })
+                ->rawColumns(['action', 'usia', 'tgl_lahir'])
                 ->make(true);
         }
         return view('pages.faskes.klinik.pasien.index');
@@ -73,11 +71,10 @@ class PasienController extends Controller
      */
     public function create()
     {
-        $no_cm = Helpers::NoCm(Auth::user()->kode_faskes);
-        $provinsi = MasterProvinsi::all()->sortBy('provinsi');
+        $provinsi = MasterProvinsi::all()->sortBy('kode_provinsi');
+        // dd($provinsi);
         return view('pages.faskes.klinik.pasien.create', [
             'provinsi' => $provinsi,
-            'no_cm' => $no_cm
         ]);
     }
 
@@ -140,10 +137,15 @@ class PasienController extends Controller
             ]
         );
         if ($validateData->fails()) {
-            return back()->with('toast_error', $validateData->getMessageBag()->all()[0])->withInput();
+            // return back()->with('toast_error', $validateData->getMessageBag()->all()[0])->withInput();
+            return response()->json([
+                'status' => false,
+                'messages' => $validateData->errors()->all()
+            ], 422);
         } else {
             $data = [
                 'kode_faskes' => Auth::user()->kode_faskes,
+                'kode_pasien' => Helpers::NoCmInsert(Auth::user()->kode_faskes, $request->nama_pasien,  $request->jenis_kelamin),
                 'no_cm' => $request->no_cm,
                 'kode_ihs_pasien' => null,
                 'nik' => $request->nik,
@@ -151,7 +153,7 @@ class PasienController extends Controller
                 'nomor_asuransi' => $request->no_asuransi,
                 'nama_pasien' => $request->nama_pasien,
                 'nama_kk' => $request->nama_kk,
-                'no_hp_telp' => $request->no_kontak,
+                'hp' => $request->no_kontak,
                 'jenis_kelamin' => $request->jenis_kelamin,
                 'tmp_lahir' => ucfirst($request->tmp_lahir),
                 'tgl_lahir' => Carbon::parse($request->tgl_lahir)->format('Y-m-d'),
@@ -161,10 +163,21 @@ class PasienController extends Controller
                 'kelurahan' => $request->kel_ktp,
                 'alamat' => $request->alamat_ktp
             ];
-            if (Pasien::create($data)) {
-                return redirect()->route('faskes.kunjungan')->with('success', 'Data Pasien berhasil tersimpan');
-            } else {
-                return redirect()->back()->with('danger', 'Data Pasien gagal tersimpan');
+            try {
+                //code...
+                if (Pasien::create($data)) {
+                    return response()->json([
+                        'status' => 'success',
+                        'message' => 'Data Pasien berhasil tersimpan'
+                    ], 200);
+                }
+            } catch (\Throwable $th) {
+                //throw $th;
+                // return redirect()->back()->with('errors', 'Gagal menyimpan data posyandu');
+                return response()->json([
+                    'status' => 'false',
+                    'messages' => array($th->getMessage())
+                ], 400);
             }
         }
     }
@@ -188,7 +201,13 @@ class PasienController extends Controller
      */
     public function edit($id)
     {
-        //
+        $pasien = Pasien::where('kode_faskes', '=', Auth::user()->kode_faskes)->where("kode_pasien", '=', $id)->first();
+        $provinsi = MasterProvinsi::all()->sortBy('kode_provinsi');
+
+        return view('pages.faskes.klinik.pasien.edit', [
+            'provinsi' => $provinsi,
+            'pasien' => $pasien
+        ]);
     }
 
     /**
@@ -212,5 +231,69 @@ class PasienController extends Controller
     public function destroy($id)
     {
         //
+    }
+    public function ambilPasien()
+    {
+        try {
+            $pasien = Helpers::Datapasien();
+            foreach ($pasien['data']['pasien'] as $ps) {
+                $data = array(
+                    'kode_faskes' => $ps['klinik'],
+                    'kode_pasien' => Helpers::NoCmInsert($ps['klinik'], $ps['nama'], $ps['jenisKelamin']),
+                    'no_cm' => $ps['noCm'],
+                    'nik' => $ps['nik'],
+                    'asuransi' => $ps['asuransi'],
+                    'nomor_asuransi' => $ps['noAsuransi'],
+                    'nama_pasien' => $ps['nama'],
+                    'nama_kk' => $ps['kk'],
+                    'hp' => $ps['hp'],
+                    'jenis_kelamin' => $ps['jenisKelamin'],
+                    'tmp_lahir' => $ps['tempatLahir'],
+                    'tgl_lahir' => Carbon::parse($ps['tglLahir'])->format('Y-m-d'),
+                    'provinsi' => $ps['provinsi'],
+                    'kota_kab' => $ps['kota'],
+                    'kecamatan' => $ps['kecamatan'],
+                    'kelurahan' => $ps['kelurahan'],
+                    'alamat' => $ps['alamat'],
+                    'status_pernikahan' => $ps['statusPernikahan'],
+
+                );
+
+                Pasien::updateOrCreate(array('kode_faskes' => $ps['klinik'], 'no_cm' => $ps['noCm']), $data);
+            }
+            echo 'berhasil tersimpan';
+        } catch (\Throwable $th) {
+            echo $th->getMessage();
+        }
+    }
+    public function getTinggal(Request $request)
+    {
+        if ($request->ajax()) {
+            try {
+                $pasien = Pasien::where('kode_pasien', '=', $request->pasien)->where('kode_faskes', '=', $request->kode)->first();
+                $data = [
+                    'prov' => $pasien->provinsi,
+                    'kota' => $pasien->kota_kab,
+                    'kec' => $pasien->kecamatan,
+                    'kel' => $pasien->kelurahan,
+                    'alamat' => $pasien->alamat,
+                ];
+
+                return response()->json(array(
+                    'status' => true,
+                    'message' => 'Berhasil mendapatkan data',
+                    'data' => $data,
+                    'status_code' => 200
+                ), 200);
+            } catch (\Throwable $th) {
+                //throw $th;
+                return response()->json(array(
+                    'status' => false,
+                    'message' => $th->getMessage(),
+                    'data' => null,
+                    'status_code' => $th->getCode()
+                ), $th->getCode());
+            }
+        }
     }
 }

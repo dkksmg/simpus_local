@@ -39,7 +39,7 @@
                                                     <th class="text-center">Role</th>
                                                     <th class="text-center">Delete At</th>
                                                     <th class="text-center">Status</th>
-                                                    <th class="text-center">Actions</th>
+                                                    <th class="text-center">Aksi</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -76,47 +76,7 @@
                         '" />');
                 }
             });
-            // $(function() {
-            //     table = $('#faskes').DataTable({
-            //         "processing": true, //Feature control the processing indicator.
-            //         "serverSide": true, //Feature control DataTables' server-side processing mode.
-            //         "searching": true,
-            //         "lengthMenu": [
-            //             [10, 25, 50, 100, 200, -1],
-            //             [10, 25, 50, 100, 200, 'All'],
-            //         ], //Initial no order.
-            //         "order": [
-            //             //   [0, 'asc'],
-            //             //   [1, 'asc'],
-            //             //   [8, 'desc']
-            //         ],
-
-            //         "ajax": {
-            //             "url": "{!! url()->current() !!}",
-            //             "type": "GET"
-            //         },
-
-            //         "columnDefs": [{
-            //             "targets": [0, 9, 10, 11], //first column     / numbering column
-            //             "orderable": false,
-            //         }, ],
-
-            //     });
-            // });
         });
-
-
-        // table.columns().every(function() {
-        //     var that = this;
-
-        //     $('input', this.header()).on('keyup change', function() {
-        //         if (that.search() !== this.value) {
-        //             that
-        //                 .search(this.value)
-        //                 .draw();
-        //         }
-        //     });
-        // });
         $(function() {
             $('#faskes').DataTable({
                 processing: true,

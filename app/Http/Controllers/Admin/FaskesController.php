@@ -9,8 +9,16 @@ use App\Helpers\Helpers;
 use App\Mail\EmailLogin;
 use App\Models\Kecamatan;
 use Illuminate\Http\Request;
+use App\Models\MasterKotaKab;
+use App\Models\MasterProvinsi;
+use App\Models\MasterKecamatan;
+use App\Models\MasterKelurahan;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Crypt;
 use Yajra\DataTables\Facades\DataTables;
@@ -174,6 +182,7 @@ class FaskesController extends Controller
                 $data['pj'] = $klinik->data->pj;
                 $data['kontak_pj'] = $klinik->data->hp_pj;
                 $data['ijin_faskes'] = $klinik->data->sip;
+                $data['tgl_terbit_ijin'] = Carbon::parse($klinik->data->tgl_terbit_ijin)->format('d-m-Y');
                 $data['tgl_berakhir_ijin'] = Carbon::parse($klinik->data->tgl_berakhir_ijin)->format('d-m-Y');
                 $data['alamat'] = $klinik->data->alamat;
                 $data['nama_kelurahan'] = $klinik->data->nama_kelurahan;
@@ -183,6 +192,8 @@ class FaskesController extends Controller
                 $data['jadwal'] = $klinik->data->jadwal;
                 $data['kode_kel'] = $klinik->data->kode_kelurahan;
                 $data['kode_kec'] = $klinik->data->kode_kecamatan;
+                $data['jenis'] = $klinik->data->jenis;
+                $data['layanan'] = $klinik->data->layanan;
                 $resp = array('status' => TRUE, 'data' => $data);
             } else {
                 $resp = array('status' => FALSE, 'data' => null);
@@ -191,6 +202,55 @@ class FaskesController extends Controller
             return response()->json($resp);
         }
     }
+    public function ambilData()
+    {
+        try {
+
+            $klinik = Helpers::Dataklinik();
+            foreach ($klinik['data']['klinik'] as $kl) {
+                $user = array(
+                    'name' => $kl['nama'],
+                    'username' => $kl['username'],
+                    'email' => $kl['email'],
+                    'email_verified_at' => null,
+                    'password' => Hash::make($kl['klinik'], [
+                        'memory' => 1024,
+                        'time' => 2,
+                        'threads' => 2,
+                    ]),
+                    'kode_faskes' => $kl['klinik'],
+                    'foto_profil' => $kl['foto'],
+                    'status' => $kl['status'] == 'off' ? 'inactive' : 'active',
+                );
+                $faskes = [
+                    'kode_faskes' => $kl['klinik'],
+                    'nama_faskes' => $kl['nama'],
+                    'phone_faskes' => null,
+                    'phone_pj' => null,
+                    'alamat_faskes' => $kl['alamat'],
+                    'nama_pimpinan' => $kl['pj'],
+                    'kecamatan' => null,
+                    'kelurahan' => null,
+                    'koordinat' => $kl['koordinat'],
+                    'ijin_terbit' => Carbon::parse($kl['terbit'])->format('Y-m-d'),
+                    'ijin_berakhir' => Carbon::parse($kl['berakhir'])->format('Y-m-d'),
+                    'no_ijin' => $kl['sip'],
+                    'jadwal' => $kl['jadwal'],
+                    'status' => $kl['status'] == 'off' ? 'inactive' : 'active',
+
+                ];
+
+                User::updateOrCreate(array('kode_faskes' => $kl['klinik']), $user);
+                Faskes::updateOrCreate(array(
+                    'kode_faskes' => $kl['klinik'],
+                ), $faskes);
+            }
+            echo 'berhasil tersimpan';
+        } catch (\Throwable $th) {
+            echo $th->getMessage();
+        }
+    }
+
 
     /**
      * Store a newly created resource in storage.
@@ -257,6 +317,8 @@ class FaskesController extends Controller
                 'koordinat' => $request->koordinat_lokasi,
                 'ijin_berakhir' => Carbon::parse($request->tgl_berakhir)->format('Y-m-d'),
                 'no_ijin' => $request->no_ijin,
+                'jenis' => Helpers::JenisKlinik($request->jenis),
+                'layanan' => Helpers::PelayananKlinik($request->pelayanan),
             ];
             $data = [
                 'nama' => $request->nama_faskes,
@@ -369,6 +431,8 @@ class FaskesController extends Controller
                 'koordinat' => $request->koordinat_lokasi,
                 'ijin_berakhir' => Carbon::parse($request->tgl_berakhir)->format('Y-m-d'),
                 'no_ijin' => $request->no_ijin,
+                'jenis' => Helpers::JenisKlinik($request->jenis),
+                'layanan' => Helpers::PelayananKlinik($request->pelayanan),
             ];
 
             if ($item->update($faskes) && $item->user()->update($user)) {
@@ -426,5 +490,77 @@ class FaskesController extends Controller
         } catch (\Throwable $th) {
             return redirect()->back()->with('danger', 'Gagal mengirim email');
         }
+    }
+    public function cekJson()
+    {
+
+        $json = file_get_contents(public_path() . '/js/wilayah.json');
+        $tes = json_decode(preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $json), true);
+
+        foreach ($tes as $wilayah) {
+            $cek = strlen(str_replace(".", "", $wilayah['kode']));
+            if ($cek == 2) {
+                $provinsi[] = array(
+                    'nama' => $wilayah['nama'],
+                    'kode_provinsi' => $wilayah['kode'],
+                );
+            } else if ($cek == 4) {
+                $kota[] = array(
+                    'kode_kota' => $wilayah['kode'],
+                    'nama' => $wilayah['nama'],
+                );
+            } else if ($cek == 6) {
+                $kecamatan[] = array(
+                    'kode_kecamatan' => $wilayah['kode'],
+                    'nama' => $wilayah['nama'],
+                );
+            } else {
+                $kelurahan[] = array(
+                    // 'kode_kecamatan' => substr($wilayah['kode'], 0, 8),
+                    // 'kode_kotakab' =>  substr($wilayah['kode'], 0, 5),
+                    // 'kode_provinsi' => substr($wilayah['kode'], 0, 2),
+                    'kode_kelurahan' => $wilayah['kode'],
+                    'nama' => $wilayah['nama'],
+                );
+                // MasterKelurahan::create($kelurahan);
+            }
+        }
+        // ambil provinsi
+        // foreach ($provinsi as $prov) {
+        //     MasterProvinsi::updateOrCreate(array('kode_provinsi' => $prov['kode_provinsi']), array(
+        //         'nama' =>  $prov['nama'],
+        //         'kode_provinsi' =>  $prov['kode_provinsi'],
+        //     ));
+        // }
+        // ambil kota kab
+        // foreach ($kota as $kota) {
+        //     MasterKotaKab::updateOrCreate(array('kode_kotakab' => $kota['kode_kota']), array(
+        //         'nama' =>  $kota['nama'],
+        //         'kode_kotakab' =>  $kota['kode_kota'],
+        //         'kode_provinsi' => substr($kota['kode_kota'], 0, 2)
+        //     ));
+        // }
+        // ambil kecamatan
+        // foreach ($kecamatan as $kec) {
+        //     MasterKecamatan::updateOrCreate(array('kode_kecamatan' => $kec['kode_kecamatan']), array(
+        //         'nama' =>  $kec['nama'],
+        //         'kode_kecamatan' => $kec['kode_kecamatan'],
+        //         'kode_kotakab' =>  substr($kec['kode_kecamatan'], 0, 5),
+        //         'kode_provinsi' => substr($kec['kode_kecamatan'], 0, 2)
+        //     ));
+        // }
+        // ambil kelurahan
+        foreach ($kelurahan as $kel) {
+            DB::table('master_kelurahans')->insert(
+                array(
+                    'nama' =>  $kel['nama'],
+                    'kode_kelurahan' =>  $kel['kode_kelurahan'],
+                    'kode_kecamatan' => substr($kel['kode_kelurahan'], 0, 8),
+                    'kode_kotakab' =>  substr($kel['kode_kelurahan'], 0, 5),
+                    'kode_provinsi' => substr($kel['kode_kelurahan'], 0, 2)
+                )
+            );
+        }
+        echo 'berhasil tersimpan';
     }
 }

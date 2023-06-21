@@ -57,6 +57,9 @@ return [
     'url' => env('APP_URL', 'http://localhost'),
 
     'asset_url' => env('ASSET_URL'),
+    'api_url_data' => env('API_URL_data', null),
+    'key_gmaps' => env('KEY_GMAPS', null),
+
 
     /*
     |--------------------------------------------------------------------------

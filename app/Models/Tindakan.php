@@ -12,7 +12,7 @@ class Tindakan extends Model
 
 
     protected $fillable = [
-        'kode_faskes', 'kode_tindakan', 'detail_tindakan', 'tarif_tindakan'
+        'kode_faskes', 'kode_tindakan', 'kode_tindakan_lama', 'detail_tindakan', 'tarif_tindakan'
     ];
 
     public function detail_faskes()

@@ -21,7 +21,8 @@ class ProfileController extends Controller
      */
     public function index()
     {
-        $faskes = User::where('kode_faskes', '=', Auth::user()->kode_faskes)->with(['detail_faskes'])->firstOrFail();
+        $faskes = User::where('kode_faskes', '=', Auth::user()->kode_faskes)->with(['detail_faskes.detail_jenis', 'detail_faskes.detail_layanan'])->firstOrFail();
+        // dd($faskes);
         $lokasi = json_decode($faskes->detail_faskes->koordinat);
         if ($lokasi != null) {
             $position = [
@@ -29,6 +30,7 @@ class ProfileController extends Controller
                     'lat' => $lokasi[0],
                     'lng' => $lokasi[1],
                     'nama' => $faskes->detail_faskes->nama_faskes,
+                    'alamat' => $faskes->detail_faskes->alamat_faskes,
                 ]
             ];
             $center =
@@ -119,24 +121,31 @@ class ProfileController extends Controller
         $item = User::findOrFail(Crypt::decrypt($id));
         if (Storage::disk('local')->exists('public/' . $item->foto_profil)) {
             $validator = Validator::make($request->all(), [
-                'email' => 'required|string|email:rfc,dns|max:255|unique:users,email,' . $item->id,
+                // 'email' => 'required|string|email:rfc,dns|max:255|unique:users,email,' . $item->id,
+                'username' => 'required|string|max:255|unique:users,username,' . $item->id,
                 'imageprofile' => 'image|mimes:jpeg,jpg,png|max:3072'
             ], [
-                'email.required' => 'Alamat Email wajib diisi',
-                'email.email' => 'Email harus merupakan alamat email yang valid',
-                'email.unique' => 'Email sudah digunakan',
+                // 'email.required' => 'Alamat Email wajib diisi',
+                // 'email.email' => 'Email harus merupakan alamat email yang valid',
+                // 'email.unique' => 'Email sudah digunakan',
+                'username.required' => 'Username wajib diisi',
+                'username.unique' => 'Username sudah digunakan',
+
                 'imageprofile.mimes' => 'Foto Profil harus berformat jpeg,jpg,png',
                 'imageprofile.image' => 'Foto Profil harus berupa gambar',
                 'imageprofile.max' => 'Foto Profil maksimal berukuran 3MB',
             ]);
         } else {
             $validator = Validator::make($request->all(), [
-                'email' => 'required|string|email:rfc,dns|max:255|unique:users,email,' . $item->id,
+                // 'email' => 'required|string|email:rfc,dns|max:255|unique:users,email,' . $item->id,
+                'username' => 'required|string|max:255|unique:users,username,' . $item->id,
                 'imageprofile' => 'required|image|mimes:jpeg,jpg,png|max:3072'
             ], [
-                'email.required' => 'Alamat Email wajib diisi',
-                'email.email' => 'Email harus merupakan alamat email yang valid',
-                'email.unique' => 'Email sudah digunakan',
+                // 'email.required' => 'Alamat Email wajib diisi',
+                // 'email.email' => 'Email harus merupakan alamat email yang valid',
+                // 'email.unique' => 'Email sudah digunakan',
+                'username.required' => 'Username wajib diisi',
+                'username.unique' => 'Username sudah digunakan',
                 'imageprofile.required' => 'Foto Profil wajib diisi',
                 'imageprofile.image' => 'Foto Profil harus berupa gambar',
                 'imageprofile.mimes' => 'Foto Profil harus berformat jpeg,jpg,png',

@@ -49,7 +49,13 @@ Route::prefix('admin')->middleware(['auth', 'admin',])
         Route::get('faskes/restore/{id}', [AdminFaskesController::class, 'restore'])->name('admin.faskes.restore');
         Route::get('faskes/cek-faskes', [AdminFaskesController::class, 'cekFaskes'])->name('admin.faskes.cek');
         Route::post('faskes/resend/{id}', [AdminFaskesController::class, 'resend'])->name('admin.faskes.resend');
+        Route::get('faskes/data', [AdminFaskesController::class, 'ambilData'])->name('admin.faskes.data');
+        Route::get('faskes/pasien/data', [PasienController::class, 'ambilPasien'])->name('admin.faskes.pasien.data');
+        Route::get('faskes/obat/data', [ObatController::class, 'ambilObat'])->name('admin.faskes.obat.data');
+        Route::get('faskes/tindakan/data', [TindakanController::class, 'ambilTindakan'])->name('admin.faskes.tindakan.data');
+        Route::get('faskes/nakes/data', [NakesController::class, 'ambilNakes'])->name('admin.faskes.nakes.data');
         Route::resource('faskes', AdminFaskesController::class);
+        Route::get('cek-json', [AdminFaskesController::class, 'cekJson']);
     });
 Route::prefix('faskes')->middleware(['auth', 'klinik',])
     ->group(function () {
@@ -83,6 +89,7 @@ Route::prefix('faskes')->middleware(['auth', 'klinik',])
         Route::get('pasien', [PasienController::class, 'index'])->name('faskes.pasien');
         Route::get('pasien/tambah', [PasienController::class, 'create'])->name('faskes.pasien.create');
         Route::get('pasien/edit/{id}', [PasienController::class, 'edit'])->name('faskes.pasien.edit');
+        Route::post('pasien/tinggal/', [PasienController::class, 'getTinggal'])->name('faskes.pasien.tinggal');
         Route::delete('pasien/{id}', [PasienController::class, 'destroy'])->name('faskes.pasien.destroy');
         Route::post('pasien', [PasienController::class, 'store'])->name('faskes.pasien.store');
         Route::put('pasien/{id}', [PasienController::class, 'update'])->name('faskes.pasien.update');

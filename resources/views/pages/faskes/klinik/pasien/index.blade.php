@@ -61,7 +61,7 @@
             $('#faskes').DataTable({
                 processing: true,
                 serverSide: true,
-                statesave: true,
+                stateSave: true,
                 ajax: "{!! url()->current() !!}",
                 columns: [{
                         render: function(data, type, row, meta) {

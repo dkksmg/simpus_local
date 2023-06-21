@@ -6,14 +6,14 @@
 @section('content')
     <div class="body flex-grow-1 px-3">
         <div class="container-lg">
-            <div class="fs-2 fw-semibold">Tambah Nakes</div>
+            <div class="fs-2 fw-semibold">Tambah Poli</div>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-4">
                     <li class="breadcrumb-item">
                         <a href="{{ route('faskes.dashboard') }}" class="text-decoration-none">Home</a>
                     </li>
                     <li class="breadcrumb-item">
-                        <a href="{{ route('faskes.nakes') }}" class="text-decoration-none">Nakes</a>
+                        <a href="{{ route('faskes.nakes') }}" class="text-decoration-none">Poli</a>
                     </li>
                     <li class="breadcrumb-item active"><span>Tambah</span></li>
                 </ol>
@@ -24,7 +24,7 @@
                     <div class="col-12">
                         <div class="card mb-4">
                             <div class="card-header">
-                                <h5>Data Nakes</h5>
+                                <h5>Data Poli</h5>
                             </div>
                             <div class="card-body">
                                 <div class="example">

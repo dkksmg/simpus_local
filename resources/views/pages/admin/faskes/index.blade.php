@@ -31,6 +31,7 @@
                                                 <th>No</th>
                                                 <th>Kode Faskes</th>
                                                 <th>Nama Faskes</th>
+                                                <th>Username</th>
                                                 <th>PJ Faskes</th>
                                                 <th>Kontak Faskes</th>
                                                 <th>Alamat Faskes</th>
@@ -64,6 +65,7 @@
             $('#faskes').DataTable({
                 processing: true,
                 serverSide: true,
+                stateSave: true,
                 ajax: "{!! url()->current() !!}",
                 columns: [{
                         render: function(data, type, row, meta) {
@@ -75,6 +77,8 @@
                     },
                     {
                         data: 'name',
+                    }, {
+                        data: 'username',
                     },
                     {
                         data: 'detail_faskes.nama_pimpinan',

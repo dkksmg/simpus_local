@@ -11,7 +11,7 @@ class Nakes extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'kode_faskes', 'kode_nakes', 'nama_nakes', 'jabatan_nakes', 'status'
+        'kode_faskes', 'kode_nakes', 'kode_nakes_lama', 'nama_nakes', 'jabatan_nakes', 'status'
     ];
 
     public function detail_faskes()
