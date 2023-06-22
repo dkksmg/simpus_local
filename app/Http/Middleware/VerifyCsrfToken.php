@@ -14,4 +14,9 @@ class VerifyCsrfToken extends Middleware
     protected $except = [
         //
     ];
+    // protected function addCookieToResponse($request, $response)
+    // {
+    //     $request->session()->regenerateToken();
+    //     return parent::addCookieToResponse($request, $response);
+    // }
 }

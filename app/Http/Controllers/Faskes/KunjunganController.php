@@ -181,7 +181,7 @@ class KunjunganController extends Controller
                                        <select class="form-select" name="dokter">
                                        <option value="" class=""> - Pilih -</option>
                                        ';
-                    $data = Nakes::with(['detail_jabatan'])->where('status', '=', 'active')->whereNot('jabatan_nakes', '=', 4)->get();
+                    $data = Nakes::with(['detail_jabatan'])->where('kode_faskes', '=', Auth::user()->kode_faskes)->where('status', '=', 'active')->whereNot('jabatan_nakes', '=', 4)->get();
                     foreach ($data as $d) {
                         $btn .= '<option value="' . $d->kode_nakes . '">' . $d->nama_nakes . '</option>';
                     }

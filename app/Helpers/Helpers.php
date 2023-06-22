@@ -117,12 +117,12 @@ class Helpers
         // $date_now = $now->year . $now->month . $now->day;
         $cek = Kunjungan::where('kode_faskes', '=', $kode)->count();
         if ($cek == 0) {
-            $urut = 101;
-            $nomer = 'VT' . $kode  . $urut;
+            $urut = 100001;
+            $nomer =   $kode . '/VT/'  . $urut;
         } else {
             $ambil = Kunjungan::where('kode_faskes', '=', $kode)->orderBy('id', 'DESC')->first();
-            $urut = (int)substr($ambil->id_kunjungan, -3) + 1;
-            $nomer = 'VT' . $kode  . $urut;
+            $urut = (int)substr($ambil->id_kunjungan, -5) + 1;
+            $nomer =  $kode . '/VT/'  . $urut;
         }
         return $nomer;
     }

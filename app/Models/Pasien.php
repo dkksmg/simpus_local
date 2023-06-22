@@ -13,6 +13,9 @@ class Pasien extends Model
     protected $fillable = [
         'kode_faskes', 'kode_pasien', 'no_cm', 'kode_ihs_pasien', 'nik', 'asuransi', 'nomor_asuransi', 'nama_pasien', 'nama_kk', 'hp', 'jenis_kelamin', 'tmp_lahir', 'tgl_lahir', 'provinsi', 'kota_kab', 'kecamatan', 'kelurahan', 'alamat', 'status_pernikahan'
     ];
+    protected $hidden = [
+        'id'
+    ];
 
     public function detail_faskes()
     {

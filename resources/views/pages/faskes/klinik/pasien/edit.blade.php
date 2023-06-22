@@ -15,7 +15,7 @@
                     <li class="breadcrumb-item">
                         <a href="{{ route('faskes.pasien') }}" class="text-decoration-none">Pasien</a>
                     </li>
-                    <li class="breadcrumb-item active"><span>Tambah</span></li>
+                    <li class="breadcrumb-item active"><span>Ubah</span></li>
                 </ol>
             </nav>
             <form {{-- action="{{ route('faskes.pasien.store') }}"  --}} method="POST" id="form">
@@ -292,7 +292,7 @@
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
-    <script src="https://cdn.ckeditor.com/4.14.1/standard-all/ckeditor.js"></script>
+    <script src="https://cdn.ckeditor.com/4.21.0/standard/ckeditor.js"></script>
 
     <script>
         $('#tgl_lahir').datepicker({
@@ -304,9 +304,9 @@
         });
     </script>
     <script>
-        $(document).ready(function() {
-            $('.ckeditor').ckeditor();
-        });
+        CKEDITOR.replaceClass = 'ckeditor'
+        CKEDITOR.config.height = 200
+
         $(document).ready(function() {
             $('.select').select2();
 
@@ -411,6 +411,7 @@
                 });
             });
         });
+        const pasien = '{{ $pasien->kode_pasien }}'
 
         $.ajaxSetup({
             headers: {
@@ -424,14 +425,14 @@
                 name: 'alamat_ktp',
                 value: CKEDITOR.instances['alamat_ktp'].getData()
             })
-            var redirect = '{{ route('faskes.kunjungan') }}'
+            var redirect = '{{ route('faskes.pasien') }}'
             var json = {};
             $.each(formData, function(i, field) {
                 json[field.name] = field.value || '';
             })
             $.ajax({
-                url: '{{ route('faskes.pasien.store') }}',
-                type: 'POST',
+                url: '{{ route('faskes.pasien.update', '') }}' + '/' + pasien,
+                type: 'PUT',
                 cache: false,
                 contentType: "application/json; charset=utf-8",
                 processData: false,
@@ -469,11 +470,10 @@
                 }
             })
         })
-        getTinggal()
+        getTinggal(pasien)
 
-        function getTinggal() {
+        function getTinggal(pasien) {
             var kode = '{{ Auth::user()->kode_faskes }}';
-            var pasien = '{{ $pasien->kode_pasien }}';
             $.ajax({
                 url: "{{ route('faskes.pasien.tinggal') }}",
                 method: "POST",

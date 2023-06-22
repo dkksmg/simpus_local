@@ -35,13 +35,14 @@ class PasienController extends Controller
                     <button class="btn btn-warning btn-sm me-2" title="Edit Data ' . $row->nama_pasien . '" onclick="window.location.href=\'' . route('faskes.pasien.edit', ($row->kode_pasien)) . '\'" ><i class="fa-solid fa-pencil"></i></button>
 
                     </td>';
+                    // <form action="' . route('faskes.pasien.destroy', ($row->kode_pasien)) . '" method="post" class="d-inline" title="Hapus Data '  . $row->nama_pasien . '">
+                    // ' . method_field('DELETE') . '
+                    // ' . csrf_field() . '
+                    // <button class="btn btn-danger btn-sm me-2"><i class="fa-solid fa-trash"></i>
+                    // </button>
+                    // </form>
                     $btn = $btn . '<td class="text-center">
-                    <form action="' . route('faskes.pasien.destroy', ($row->kode_pasien)) . '" method="post" class="d-inline" title="Hapus Data '  . $row->nama_pasien . '">
-                    ' . method_field('DELETE') . '
-                    ' . csrf_field() . '
-                    <button class="btn btn-danger btn-sm me-2"><i class="fa-solid fa-trash"></i>
-                    </button>
-                    </form>
+                    <button class="btn-hover-shine btn btn-shadow btn-danger btn-sm me-2" id="btn-delete" data-id="' . ($row->kode_pasien) . '" data-nama="' . ($row->nama_pasien) . '" title="Hapus Data '  . $row->nama_pasien . '"><i class="fa-solid fa-trash"></i></button>
                     </td>';
                     $btn = $btn . '</tr></tbody></table>';
                     return $btn;
@@ -58,7 +59,7 @@ class PasienController extends Controller
                 //     $loc = $data->alamat . ' ' . ucwords(strtolower($data->detail_kotakab->kota . ', Kecamatan ' . $data->detail_kecamatan->kecamatan . ', Kelurahan ' . $data->detail_kelurahan->kelurahan . ' Provinsi ' . $data->detail_provinsi->provinsi));
                 //     return $loc;
                 // })
-                ->rawColumns(['action', 'usia', 'tgl_lahir'])
+                ->rawColumns(['action', 'usia', 'tgl_lahir', 'alamat'])
                 ->make(true);
         }
         return view('pages.faskes.klinik.pasien.index');
@@ -219,7 +220,101 @@ class PasienController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $validateData = Validator::make(
+            $request->all(),
+            [
+                'no_cm' => 'required|string',
+                'nik' => 'required|integer|digits:16',
+                'asuransi_pasien' => 'required',
+                'no_asuransi' => 'string',
+                'nama_pasien' => 'required|string|max:100',
+                'nama_kk' => 'required|string|max:100',
+                'no_kontak' => 'required|numeric|digits_between:9,13',
+                'jenis_kelamin' => 'required',
+                'tmp_lahir' => 'required|alpha',
+                'tgl_lahir' => 'required|date',
+                'provinsi_ktp' => 'required',
+                'kotakab_ktp' => 'required',
+                'kec_ktp' => 'required',
+                'kel_ktp' => 'required',
+                'alamat_ktp' => 'required|string|max:255',
+            ],
+            [
+                'no_cm.required' => 'No CM tidak boleh kosong',
+                'no_cm.string' => 'No CM wajib berupa string',
+                'nik.required' => 'NIK tidak boleh kosong',
+                'nik.numeric' => 'NIK wajib berupa angka',
+                'nik.digits' => 'NIK berisi maksimum 16 digit',
+                'asuransi_pasien.required' => 'Asuransi wajib di pilih',
+                'no_asuransi.string' => 'Nomor Asuransi wajib berupa string',
+                'nama_pasien.required' => 'Nama Pasien tidak boleh kosong',
+                'nama_pasien.string' => 'Nama Pasien harus berupa string',
+                'nama_pasien.max' => 'Nama Pasien maksimum berisi 100 karakter',
+                'nama_kk.required' => 'Nama Kepala Keluarga tidak boleh kosong',
+                'nama_kk.string' => 'Nama Kepala Keluaraga harus berupa string',
+                'nama_kk.max' => 'Nama Kepala Keluarga maksimum berisi 100 karakter',
+                'no_kontak.required' => 'Nomor kontak tidak boleh kosong',
+                'no_kontak.numeric' => 'Nomor kontak wajib berupa angka',
+                'no_kontak.digits' => 'Nomor kontak maksimum berisi 13 digit',
+                'jenis_kelamin.required' => 'Jenis kelamin wajib dipilih',
+                'tmp_lahir.required' => 'Tempat Lahir tidak boleh kosong',
+                'tmp_lahir.alpha' => 'Tempat Lahir wajib berupa huruf',
+                'tgl_lahir.required' => 'Tanggal Lahir tidak boleh kosong',
+                'tgl_lahir.date' => 'Tanggal Lahir merupakan tanggal yang valid',
+                'provinsi_ktp.required' => 'Provinsi wajib dipilih',
+                'kotakab_ktp.required' => 'Kota/Kab wajib dipilih',
+                'kec_ktp.required' => 'Kecamatan wajib dipilih',
+                'kel_ktp.required' => 'Kelurahan wajib dipilih',
+                'alamat_ktp.required' => 'Alamat tidak boleh kosong',
+                'alamat_ktp.string' => 'Alamat harus berupa string',
+                'alamat_ktp.max' => 'Alamat maksimum 155 karakter',
+            ]
+        );
+        if ($validateData->fails()) {
+            // return back()->with('toast_error', $validateData->getMessageBag()->all()[0])->withInput();
+            return response()->json([
+                'status' => false,
+                'messages' => $validateData->errors()->all()
+            ], 422);
+        } else {
+            try {
+                $pasien = Pasien::where('kode_pasien', '=', $id)->first();
+                // dd($pasien);
+                $data = [
+                    // 'kode_faskes' => Auth::user()->kode_faskes,
+                    // 'kode_pasien' => Helpers::NoCmInsert(Auth::user()->kode_faskes, $request->nama_pasien,  $request->jenis_kelamin),
+                    'no_cm' => $request->no_cm,
+                    'kode_ihs_pasien' => null,
+                    'nik' => $request->nik,
+                    'asuransi' => $request->asuransi_pasien,
+                    'nomor_asuransi' => $request->no_asuransi,
+                    'nama_pasien' => $request->nama_pasien,
+                    'nama_kk' => $request->nama_kk,
+                    'hp' => $request->no_kontak,
+                    'jenis_kelamin' => $request->jenis_kelamin,
+                    'tmp_lahir' => ucfirst($request->tmp_lahir),
+                    'tgl_lahir' => Carbon::parse($request->tgl_lahir)->format('Y-m-d'),
+                    'provinsi' => $request->provinsi_ktp,
+                    'kota_kab' => $request->kotakab_ktp,
+                    'kecamatan' => $request->kec_ktp,
+                    'kelurahan' => $request->kel_ktp,
+                    'alamat' => $request->alamat_ktp
+                ];
+                //code...
+                if ($pasien->update($data)) {
+                    return response()->json([
+                        'status' => 'success',
+                        'message' => 'Data ' . $request->nama_pasien . ' berhasil tersimpan'
+                    ], 200);
+                }
+            } catch (\Throwable $th) {
+                //throw $th;
+                return response()->json([
+                    'status' => 'false',
+                    'messages' => array($th->getMessage())
+                ], 400);
+            }
+        }
     }
 
     /**
@@ -228,9 +323,30 @@ class PasienController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        //
+        if ($request->ajax()) {
+            $pasien = Pasien::where('kode_pasien', '=', $request->id)->first();
+            try {;
+                if ($pasien->delete()) {
+                    return response()->json([
+                        'status' => 'success',
+                        'message' => 'Data Pasien ' . $request->nama . ' berhasil dihapus'
+                    ], 200);
+                } else {
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => 'Data Pasien ' . $request->nama . ' gagal dihapus'
+                    ], 400);
+                }
+            } catch (\Throwable $th) {
+                //throw $th;
+                return response()->json([
+                    'status' => 'error',
+                    'message' => $th->getMessage(),
+                ], 400);
+            }
+        }
     }
     public function ambilPasien()
     {

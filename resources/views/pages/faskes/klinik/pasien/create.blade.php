@@ -247,7 +247,7 @@
                                                         <div class="mb-3">
                                                             <label class="form-label" for="tgl_lahir">Alamat
                                                             </label>
-                                                            <textarea class="form-control @error('alamat_ktp') is-invalid @enderror" name="alamat_ktp">{{ old('alamat_ktp') }}</textarea>
+                                                            <textarea class="form-control @error('alamat_ktp') is-invalid @enderror ckeditor" name="alamat_ktp">{{ old('alamat_ktp') }}</textarea>
                                                             @error('tgl_lahir')
                                                                 <div class="alert alert-danger">{{ $message }}</div>
                                                             @enderror
@@ -280,6 +280,8 @@
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
+    <script src="https://cdn.ckeditor.com/4.21.0/standard/ckeditor.js"></script>
+
     <script>
         $('#tgl_lahir').datepicker({
             uiLibrary: 'bootstrap4',
@@ -290,6 +292,9 @@
         });
     </script>
     <script>
+        CKEDITOR.replaceClass = 'ckeditor'
+        CKEDITOR.config.height = 200
+
         $(document).ready(function() {
             $('.select').select2();
         });
