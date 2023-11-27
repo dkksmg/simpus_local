@@ -286,11 +286,12 @@
                 bounds.extend(marker.position);
                 google.maps.event.addListener(marker, 'click', (function(marker, location) {
                     return function() {
-                        infowindow.setContent("<b>" + location.nama + "</b><br>" + location.alamat +
+                        infowindow.setContent("<span style='color:black'><b>" + location.nama + "</b><br>" +
+                            location.alamat +
                             "<br><br>" +
                             location.lat +
                             " & " + location
-                            .lng);
+                            .lng + "</span>");
                         infowindow.open(map, marker);
                     }
                 })(marker, location));

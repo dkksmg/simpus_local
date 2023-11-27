@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
@@ -43,5 +44,17 @@ class LoginController extends Controller
             $this->redirectTo = route('faskes.dashboard');
         }
         $this->middleware('guest')->except('logout');
+    }
+    public function username()
+    {
+        return 'username';
+    }
+    protected function validateLogin(Request $request)
+    {
+        $this->validate($request, [
+            $this->username() => 'required',
+            'password' => 'required',
+            // new rules here
+        ]);
     }
 }
